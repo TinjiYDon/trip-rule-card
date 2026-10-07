@@ -1,0 +1,11 @@
+{
+  "id": "heldout-river",
+  "name": "留出馆 · 江边公园",
+  "city": "上海",
+  "split": "heldout",
+  "verified": false,
+  "source": "留出样本，句子与训练集不同，供现场证明不是写死馆名",
+  "page_text": "游客身高不满1.2米免票。1.2米以上、1.4米以下购买半票。可提前6天，每日09:30放票。",
+  "promo_text": "小孩全部免票入园。",
+  "gold": {"age": 7, "height_m": 1.3, "ticket": "half"}
+}

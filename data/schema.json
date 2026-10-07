@@ -1,0 +1,24 @@
+{
+  "venue": {
+    "id": "字符串，文件名可不相同，id 必须唯一",
+    "name": "展示名",
+    "city": "城市",
+    "split": "train 或 heldout。heldout 不放进默认演示列表",
+    "verified": "true 表示已对照当天官网。false 表示种子例句，不能写成官方现行票价",
+    "source": "出处 URL 或报道名",
+    "page_text": "给抽取器读的票务散文，不要把答案写进种草",
+    "promo_text": "短视频或笔记里的说法",
+    "gold": {
+      "age": "评测用年龄",
+      "height_m": "评测用身高（米）",
+      "ticket": "free | half | full"
+    }
+  },
+  "owners": {
+    "data/venues": "标注",
+    "rulecard/extract.py": "编译",
+    "rulecard/execute.py": "编译",
+    "eval": "评测",
+    "demo": "演示"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tech-museum",
+  "name": "中国科学技术馆（简化）",
+  "city": "北京",
+  "split": "train",
+  "verified": false,
+  "source": "https://cstm.cdstm.cn/ykfw/yygp/index.html 条款已简化，标注同学须按当天页面改写",
+  "page_text": "8周岁以下或身高1.3米以下儿童免票，二选一。最早可于参观7日前18:00预订。",
+  "promo_text": "科技馆小孩免票。",
+  "gold": {"age": 7, "height_m": 1.3, "ticket": "free"}
+}

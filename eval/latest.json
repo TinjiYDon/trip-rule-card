@@ -1,0 +1,91 @@
+{
+  "n": 8,
+  "baseline_accuracy": 0.25,
+  "compiled_accuracy": 1.0,
+  "heldout_n": 2,
+  "heldout_baseline_accuracy": 0.0,
+  "heldout_compiled_accuracy": 1.0,
+  "rows": [
+    {
+      "id": "both-gate",
+      "split": "train",
+      "gold": "full",
+      "baseline": "half",
+      "compiled": "full",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "儿童票须同时满足:身高1.4米以下，且未满14周岁半票"
+    },
+    {
+      "id": "bundle-show",
+      "split": "train",
+      "gold": "half",
+      "baseline": "free",
+      "compiled": "half",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "1.2米以下免票，1.4米以下半票"
+    },
+    {
+      "id": "either-park",
+      "split": "train",
+      "gold": "half",
+      "baseline": "free",
+      "compiled": "half",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "儿童优惠满足其一即可:身高1.5米以下，或未满11周岁，二选一按半票"
+    },
+    {
+      "id": "gugong",
+      "split": "train",
+      "gold": "free",
+      "baseline": "free",
+      "compiled": "free",
+      "baseline_correct": true,
+      "compiled_correct": true,
+      "clause": "未满18周岁的中国公民免费参观"
+    },
+    {
+      "id": "height-park",
+      "split": "train",
+      "gold": "half",
+      "baseline": "free",
+      "compiled": "half",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "1.2米以下免票，1.2米至1.4米半票，1.4米及以上全票"
+    },
+    {
+      "id": "heldout-both",
+      "split": "heldout",
+      "gold": "full",
+      "baseline": "half",
+      "compiled": "full",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "购买儿童半票缺一不可:身高1.4米以下，且未满14周岁"
+    },
+    {
+      "id": "heldout-river",
+      "split": "heldout",
+      "gold": "half",
+      "baseline": "free",
+      "compiled": "half",
+      "baseline_correct": false,
+      "compiled_correct": true,
+      "clause": "游客身高不满1.2米免票"
+    },
+    {
+      "id": "tech-museum",
+      "split": "train",
+      "gold": "free",
+      "baseline": "free",
+      "compiled": "free",
+      "baseline_correct": true,
+      "compiled_correct": true,
+      "clause": "8周岁以下或身高1.3米以下儿童免票，二选一"
+    }
+  ],
+  "note": "种子集含未核验馆。准确率只说明抽取器相对关键词对照的差距，不能写成全国投诉统计。"
+}

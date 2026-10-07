@@ -1,0 +1,11 @@
+{
+  "id": "heldout-both",
+  "name": "留出馆 · 双条件纪念馆",
+  "city": "南京",
+  "split": "heldout",
+  "verified": false,
+  "source": "留出样本。句子换成「缺一不可」，不复用训练集原句",
+  "page_text": "购买儿童半票缺一不可：身高1.4米以下，且未满14周岁。可提前4天，每日15:00放票。",
+  "promo_text": "14岁以下都算半票。",
+  "gold": {"age": 7, "height_m": 1.45, "ticket": "full"}
+}
