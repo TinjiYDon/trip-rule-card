@@ -1,91 +1,252 @@
 {
-  "n": 8,
-  "baseline_accuracy": 0.25,
+  "n_files": 13,
+  "n_scored": 12,
+  "keyword_accuracy": 0.083,
+  "first_number_accuracy": 0.333,
   "compiled_accuracy": 1.0,
-  "heldout_n": 2,
-  "heldout_baseline_accuracy": 0.0,
+  "heldout_n": 3,
+  "heldout_keyword_accuracy": 0.0,
+  "heldout_first_number_accuracy": 0.333,
   "heldout_compiled_accuracy": 1.0,
+  "verified_n": 2,
+  "verified_compiled_accuracy": 1.0,
+  "error_counts": {
+    "dual_threshold": 3,
+    "promo_conflict": 9,
+    "bundle": 1,
+    "no_threshold": 1
+  },
+  "error_labels": {
+    "promo_conflict": "种草冲突",
+    "dual_threshold": "双门槛",
+    "bundle": "仅售套票",
+    "no_threshold": "没有可执行门槛",
+    "compile_miss": "编译未对上标注",
+    "release_miss": "放票时刻没读到",
+    "schema_issue": "结构校验未通过"
+  },
   "rows": [
+    {
+      "id": "and-plain",
+      "split": "train",
+      "verified": false,
+      "gold": "full",
+      "keyword": "half",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "full",
+      "keyword_correct": false,
+      "first_number_correct": true,
+      "compiled_correct": true,
+      "errors": [
+        "dual_threshold"
+      ],
+      "mode": "both"
+    },
     {
       "id": "both-gate",
       "split": "train",
+      "verified": false,
       "gold": "full",
-      "baseline": "half",
+      "keyword": "half",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "full",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": true,
       "compiled_correct": true,
-      "clause": "儿童票须同时满足:身高1.4米以下，且未满14周岁半票"
+      "errors": [
+        "dual_threshold"
+      ],
+      "mode": "both"
     },
     {
       "id": "bundle-show",
       "split": "train",
+      "verified": false,
       "gold": "half",
-      "baseline": "free",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "half",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": false,
       "compiled_correct": true,
-      "clause": "1.2米以下免票，1.4米以下半票"
+      "errors": [
+        "promo_conflict",
+        "bundle"
+      ],
+      "mode": "height"
+    },
+    {
+      "id": "cm-park",
+      "split": "train",
+      "verified": false,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
+      "compiled_correct": true,
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "height"
     },
     {
       "id": "either-park",
       "split": "train",
+      "verified": false,
       "gold": "half",
-      "baseline": "free",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "half",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": false,
       "compiled_correct": true,
-      "clause": "儿童优惠满足其一即可:身高1.5米以下，或未满11周岁，二选一按半票"
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "either"
     },
     {
       "id": "gugong",
       "split": "train",
+      "verified": true,
       "gold": "free",
-      "baseline": "free",
+      "keyword": "free",
+      "first_number": "free",
+      "ablation": "free",
       "compiled": "free",
-      "baseline_correct": true,
+      "keyword_correct": true,
+      "first_number_correct": true,
       "compiled_correct": true,
-      "clause": "未满18周岁的中国公民免费参观"
+      "errors": [],
+      "mode": "age"
     },
     {
       "id": "height-park",
       "split": "train",
+      "verified": false,
       "gold": "half",
-      "baseline": "free",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "half",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": false,
       "compiled_correct": true,
-      "clause": "1.2米以下免票，1.2米至1.4米半票，1.4米及以上全票"
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "height"
+    },
+    {
+      "id": "heldout-board",
+      "split": "heldout",
+      "verified": false,
+      "gold": null,
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "full",
+      "compiled": "full",
+      "keyword_correct": null,
+      "first_number_correct": null,
+      "compiled_correct": null,
+      "errors": [
+        "no_threshold",
+        "promo_conflict"
+      ],
+      "mode": "age"
     },
     {
       "id": "heldout-both",
       "split": "heldout",
+      "verified": false,
       "gold": "full",
-      "baseline": "half",
+      "keyword": "half",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "full",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": true,
       "compiled_correct": true,
-      "clause": "购买儿童半票缺一不可:身高1.4米以下，且未满14周岁"
+      "errors": [
+        "dual_threshold"
+      ],
+      "mode": "both"
+    },
+    {
+      "id": "heldout-inclusive",
+      "split": "heldout",
+      "verified": false,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
+      "compiled_correct": true,
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "either"
     },
     {
       "id": "heldout-river",
       "split": "heldout",
+      "verified": false,
       "gold": "half",
-      "baseline": "free",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
       "compiled": "half",
-      "baseline_correct": false,
+      "keyword_correct": false,
+      "first_number_correct": false,
       "compiled_correct": true,
-      "clause": "游客身高不满1.2米免票"
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "height"
     },
     {
       "id": "tech-museum",
       "split": "train",
-      "gold": "free",
-      "baseline": "free",
-      "compiled": "free",
-      "baseline_correct": true,
+      "verified": true,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
       "compiled_correct": true,
-      "clause": "8周岁以下或身高1.3米以下儿童免票，二选一"
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "either"
+    },
+    {
+      "id": "yi-mi",
+      "split": "train",
+      "verified": false,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
+      "compiled_correct": true,
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "height"
     }
   ],
-  "note": "种子集含未核验馆。准确率只说明抽取器相对关键词对照的差距，不能写成全国投诉统计。"
+  "note": "分母只含有标注票种的馆。立牌页没有数字，不进准确率。已核对馆目前只有故宫和中国科学技术馆。其余是规则类型例句。"
 }

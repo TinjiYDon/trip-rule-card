@@ -4,8 +4,8 @@
   "city": "北京",
   "split": "train",
   "verified": true,
-  "source": "https://www.dpm.org.cn/subject_booking/index.html",
-  "page_text": "未满18周岁的中国公民免费参观。不以身高作为儿童票标准。学生优惠与儿童免费不能叠加。预约放票时间为每日20:00，可提前7天预约。",
+  "source": "https://www.dpm.org.cn/subject_booking/index.html 大门票优惠政策与参观前7日20:00预约",
+  "page_text": "未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观。18周岁以上学生凭学生证可购学生票。不售当日票，门票于参观前7日20:00开始预约。",
   "promo_text": "带娃去故宫，儿童免费，随便进。",
   "gold": {"age": 7, "height_m": 1.3, "ticket": "free"}
 }

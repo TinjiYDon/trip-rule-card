@@ -35,6 +35,8 @@ class Handler(BaseHTTPRequestHandler):
                     "source": venue.get("source") or "",
                     "promo_text": venue.get("promo_text") or "",
                     "page_text": venue.get("page_text") or "",
+                    "age": (venue.get("gold") or {}).get("age", 7),
+                    "height_m": (venue.get("gold") or {}).get("height_m", 1.3),
                 }
                 for venue in list_venues()
             ]
@@ -49,8 +51,10 @@ class Handler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", "0"))
         body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
         venue = get_venue(body["id"])
-        if body.get("promo_text"):
-            venue = {**venue, "promo_text": body["promo_text"]}
+        if "promo_text" in body:
+            venue = {**venue, "promo_text": body.get("promo_text") or ""}
+        if "page_text" in body and body.get("page_text") != venue.get("page_text"):
+            venue = {**venue, "page_text": body.get("page_text") or "", "gold": None, "verified": False}
         result = compile_and_run(
             venue,
             int(body.get("age", 7)),

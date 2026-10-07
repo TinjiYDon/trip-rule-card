@@ -1,0 +1,11 @@
+{
+  "id": "cm-park",
+  "name": "示例厘米馆",
+  "city": "成都",
+  "split": "train",
+  "verified": false,
+  "source": "种子例句。门槛写成厘米，用来检查换算，不是某馆现行价",
+  "page_text": "120厘米以下免票，140厘米以下半票。提前2天，每日09:00放票。",
+  "promo_text": "小朋友免票。",
+  "gold": {"age": 7, "height_m": 1.3, "ticket": "half"}
+}

@@ -6,19 +6,45 @@ TICKET_LABEL = {"free": "免票", "half": "半票", "full": "全票"}
 _RANK = {"free": 0, "half": 1, "full": 2}
 
 
-def _band(value: float, free_lt: float | None, half_lt: float | None) -> str:
-    if free_lt is not None and value < free_lt:
+def _band(
+    value: float,
+    free_lt: float | None,
+    half_lt: float | None,
+    free_incl: bool = False,
+    half_incl: bool = False,
+) -> str:
+    if _under(value, free_lt, free_incl):
         return "free"
-    if half_lt is not None and value < half_lt:
+    if _under(value, half_lt, half_incl):
         return "half"
     return "full"
+
+
+def _under(value: float, bound: float | None, inclusive: bool) -> bool:
+    if bound is None:
+        return False
+    if value < bound:
+        return True
+    return bool(inclusive) and abs(value - bound) < 1e-6
 
 
 def judge_ticket(rule: dict, age: int, height_m: float) -> tuple[str, str]:
     """返回 (free|half|full, 触发说明)。"""
     mode = rule.get("mode") or "height"
-    height_result = _band(height_m, rule.get("free_height_m"), rule.get("half_height_m"))
-    age_result = _band(float(age), _as_float(rule.get("free_age_lt")), _as_float(rule.get("half_age_lt")))
+    height_result = _band(
+        height_m,
+        rule.get("free_height_m"),
+        rule.get("half_height_m"),
+        bool(rule.get("free_height_inclusive")),
+        bool(rule.get("half_height_inclusive")),
+    )
+    age_result = _band(
+        float(age),
+        _as_float(rule.get("free_age_lt")),
+        _as_float(rule.get("half_age_lt")),
+        bool(rule.get("free_age_inclusive")),
+        bool(rule.get("half_age_inclusive")),
+    )
 
     if mode == "height":
         return height_result, _clause(rule, "clause_ticket", "按身高带判定")

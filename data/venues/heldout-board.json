@@ -1,0 +1,11 @@
+{
+  "id": "heldout-board",
+  "name": "留出馆 · 只有立牌",
+  "city": "青岛",
+  "split": "heldout",
+  "verified": false,
+  "source": "留出样本。页面没有数字，用来展示编译失败的边界，不进入准确率分母",
+  "page_text": "儿童优惠以入口立牌公示为准，详情咨询现场工作人员。",
+  "promo_text": "小孩全免。",
+  "gold": null
+}

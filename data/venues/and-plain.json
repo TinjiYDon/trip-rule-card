@@ -1,0 +1,11 @@
+{
+  "id": "and-plain",
+  "name": "示例合取馆",
+  "city": "杭州",
+  "split": "train",
+  "verified": false,
+  "source": "种子例句。用「且」写合取，不写「同时满足」这两个字，避免抽取只认原词",
+  "page_text": "半票只在身高1.4米以下且未满14周岁时成立。提前3天，每日18:00放票。",
+  "promo_text": "小孩来都算半票。",
+  "gold": {"age": 7, "height_m": 1.45, "ticket": "full"}
+}

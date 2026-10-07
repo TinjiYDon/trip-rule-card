@@ -1,0 +1,11 @@
+{
+  "id": "heldout-inclusive",
+  "name": "留出馆 · 含本数",
+  "city": "苏州",
+  "split": "heldout",
+  "verified": false,
+  "source": "留出样本。边界写成「含」，句子不复用训练集",
+  "page_text": "免票线为1.20米(含)以下。未满6周岁也可免票，二选一。半票线为1.50米(含)以下。提前5天，每日11:00放票。",
+  "promo_text": "不到一米二全免费，再高也免。",
+  "gold": {"age": 7, "height_m": 1.25, "ticket": "half"}
+}

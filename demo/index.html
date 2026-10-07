@@ -16,6 +16,7 @@
     label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
     select, textarea, input[type="number"] { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; }
     textarea { min-height: 72px; resize: vertical; }
+    #page { min-height: 140px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .page { background: #f7f8fb; border-radius: 8px; padding: 10px 12px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
     button { margin-top: 14px; background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 10px 14px; font: inherit; cursor: pointer; }
@@ -31,6 +32,9 @@
     .pill.bad { background: #fff1ec; color: var(--bad); }
     .pill.ok { background: #e8f6f2; color: var(--ok); }
     .warn { font-size: 12px; color: var(--muted); }
+    .trace { grid-column: 1 / -1; }
+    .step { display: grid; grid-template-columns: 72px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .step b { color: var(--blue); }
   </style>
 </head>
 <body>
@@ -55,8 +59,8 @@
       </div>
       <label>短视频 / 笔记</label>
       <textarea id="promo"></textarea>
-      <label>票务页原文</label>
-      <div class="page" id="page"></div>
+      <label>票务页原文（可改，改过后不再显示预存答案）</label>
+      <textarea id="page"></textarea>
       <label><input id="student" type="checkbox" /> 同时使用学生优惠（看能否叠加）</label>
       <button id="run" type="button">编译并执行</button>
     </section>
@@ -64,6 +68,11 @@
       <h2>预订前的四格</h2>
       <div class="compare" id="compare"></div>
       <div class="cells" id="cells"></div>
+      <p class="warn" id="errors"></p>
+    </section>
+    <section class="panel trace">
+      <h2>六步数据流</h2>
+      <div id="trace"></div>
     </section>
   </main>
   <script>
@@ -83,7 +92,7 @@
       const venue = current();
       if (!venue) return;
       promoEl.value = venue.promo_text;
-      pageEl.textContent = venue.page_text;
+      pageEl.value = venue.page_text;
       const tag = venue.verified ? "已对照来源" : "种子例句，不是该馆现行票价";
       const split = venue.split === "heldout" ? "留出馆" : "训练馆";
       sourceEl.textContent = `${venue.city} · ${split} · ${tag} · ${venue.source}`;
@@ -108,16 +117,27 @@
           age: Number(document.querySelector("#age").value),
           height_m: Number(heightEl.value),
           promo_text: promoEl.value,
+          page_text: pageEl.value,
           benefits
         })
       })).json();
       const compiled = result.compiled;
       const promoBad = compiled.promo.conflict;
       const benefitBad = !compiled.benefits.ok;
+      const names = { promo_conflict: "种草冲突", dual_threshold: "双门槛", bundle: "仅售套票", no_threshold: "没有可执行门槛", compile_miss: "编译未对上标注", release_miss: "放票时刻没读到" };
+      const tone = (flag) => flag === false ? "bad" : flag === true ? "ok" : "";
+      const gold = result.gold_ticket ? `<span class="pill">标注答案：${label[result.gold_ticket]}</span>` : "";
       document.querySelector("#compare").innerHTML = `
-        <span class="pill ${result.baseline_ticket === result.gold_ticket ? "ok" : "bad"}">只看种草：${label[result.baseline_ticket]}</span>
-        <span class="pill ok">编译后：${compiled.ticket_label}</span>
-        <span class="pill">标注答案：${label[result.gold_ticket] || "无"}</span>`;
+        <span class="pill ${tone(result.baseline_correct)}">只看种草：${label[result.baseline_ticket]}</span>
+        <span class="pill ${tone(result.first_number_correct)}">只读首个数：${label[result.first_number_ticket]}</span>
+        <span class="pill ${tone(result.compiled_correct)}">编译执行：${compiled.ticket_label}</span>
+        ${gold}`;
+      document.querySelector("#errors").textContent = (result.errors || []).length
+        ? "错因：" + result.errors.map((item) => names[item] || item).join("、")
+        : "这页没有标出错因";
+      document.querySelector("#trace").innerHTML = (result.trace || []).map((step) =>
+        `<div class="step"><b>${step.stage}</b><span>${step.summary}${step.detail ? " · " + step.detail : ""}</span></div>`
+      ).join("");
       document.querySelector("#cells").innerHTML = `
         <div class="cell"><b>这个人算什么票</b>${compiled.ticket_label}<div class="muted">${compiled.ticket_clause}</div></div>
         <div class="cell ${promoBad ? "bad" : "ok"}"><b>种草和在售</b>${promoBad ? "说法和条款不一致" : "说法和票种一致"}${compiled.promo.bundle_only ? "。页面仅售套票" : ""}<div class="muted">${compiled.promo.clause || compiled.promo.onsale_note || ""}</div></div>

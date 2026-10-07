@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>规则卡评测报告</title>
+<style>
+body { font-family: "Microsoft YaHei", sans-serif; margin: 32px; color: #172033; }
+h1 { font-size: 22px; }
+.cards { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.card { border: 1px solid #e4e8ef; border-radius: 10px; padding: 12px 16px; }
+.card b { display: block; font-size: 24px; color: #124ea2; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 16px; }
+td, th { border: 1px solid #e4e8ef; padding: 6px 8px; text-align: left; }
+.compiled { font-weight: 700; }
+.bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 13px; }
+.bar span { width: 130px; }
+.bar i { display: inline-block; height: 12px; background: #124ea2; border-radius: 6px; min-width: 4px; }
+.note { color: #5c6778; font-size: 12px; margin-top: 16px; }
+</style></head><body>
+<h1>规则卡 · 评测报告</h1>
+<div class="cards">
+<div class="card">页面<b>13</b>含 12 条有标注</div>
+<div class="card">只看种草<b>0.083</b></div>
+<div class="card">只读首个数<b>0.333</b></div>
+<div class="card">编译执行<b>1.0</b></div>
+<div class="card">已核对官网<b>2</b></div>
+</div>
+<h2>错因分布</h2><div class="bar"><span>种草冲突</span><i style="width:324px"></i><b>9</b></div><div class="bar"><span>双门槛</span><i style="width:108px"></i><b>3</b></div><div class="bar"><span>仅售套票</span><i style="width:36px"></i><b>1</b></div><div class="bar"><span>没有可执行门槛</span><i style="width:36px"></i><b>1</b></div>
+<h2>逐条结果</h2>
+<table><tr><th>馆</th><th>切分</th><th>核对</th><th>标注</th><th>种草</th><th>首个数</th><th>编译</th><th>错因</th></tr><tr><td>and-plain</td><td>train</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>both-gate</td><td>train</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>bundle-show</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突、仅售套票</td></tr><tr><td>cm-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>either-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>gugong</td><td>train</td><td>已核对</td><td>免票</td><td>免票</td><td>免票</td><td class='compiled'>免票</td><td>—</td></tr><tr><td>height-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>heldout-board</td><td>heldout</td><td>例句</td><td>无标注</td><td>免票</td><td>全票</td><td class='compiled'>全票</td><td>没有可执行门槛、种草冲突</td></tr><tr><td>heldout-both</td><td>heldout</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>heldout-inclusive</td><td>heldout</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>heldout-river</td><td>heldout</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>tech-museum</td><td>train</td><td>已核对</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>yi-mi</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr></table>
+<p class="note">分母只含有标注票种的馆。立牌页没有数字，不进准确率。已核对馆目前只有故宫和中国科学技术馆。其余是规则类型例句。</p>
+</body></html>

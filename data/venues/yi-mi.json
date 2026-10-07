@@ -1,0 +1,11 @@
+{
+  "id": "yi-mi",
+  "name": "示例口语馆",
+  "city": "重庆",
+  "split": "train",
+  "verified": false,
+  "source": "种子例句。门槛写成「一米二」，不是某馆现行价",
+  "page_text": "不到一米二免票，一米二至一米四半票。每日09:00放票，可提前1天。",
+  "promo_text": "孩子免票，现场不用问。",
+  "gold": {"age": 7, "height_m": 1.3, "ticket": "half"}
+}
