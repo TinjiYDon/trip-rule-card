@@ -13,6 +13,12 @@ td, th { border: 1px solid #e4e8ef; padding: 6px 8px; text-align: left; }
 .bar span { width: 130px; }
 .bar i { display: inline-block; height: 12px; background: #124ea2; border-radius: 6px; min-width: 4px; }
 .note { color: #5c6778; font-size: 12px; margin-top: 16px; }
+ol.trace { margin: 8px 0 0; padding-left: 0; list-style: none; }
+ol.trace li { display: grid; grid-template-columns: 96px 160px 1fr; gap: 10px;
+  align-items: baseline; font-size: 13px; padding: 7px 10px;
+  border-left: 3px solid #124ea2; background: #f6f8fc; margin-bottom: 5px; }
+ol.trace li b { color: #124ea2; font-weight: 600; }
+ol.trace li em { color: #5c6778; font-style: normal; font-size: 12px; }
 </style></head><body>
 <h1>规则卡 · 评测报告</h1>
 <div class="cards">
@@ -23,6 +29,14 @@ td, th { border: 1px solid #e4e8ef; padding: 6px 8px; text-align: left; }
 <div class="card">已核对官网<b>2</b></div>
 </div>
 <h2>错因分布</h2><div class="bar"><span>种草冲突</span><i style="width:324px"></i><b>9</b></div><div class="bar"><span>双门槛</span><i style="width:108px"></i><b>3</b></div><div class="bar"><span>仅售套票</span><i style="width:36px"></i><b>1</b></div><div class="bar"><span>没有可执行门槛</span><i style="width:36px"></i><b>1</b></div>
+<h2>六步轨迹 · 故宫博物院</h2>
+<p class="note">步骤名取自 <code>rulecard/flow.py</code>，与演示页逐字相同。</p>
+<ol class="trace"><li><b>1. 分句</b><span>3 句</span><em>未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观 / 18周岁以上学生凭学生证可购学生票 / 不售当日票，门票于参观前7日20:00开始预约</em></li><li><b>2. 抽槽</b><span>判定方式 age</span><em>未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观</em></li><li><b>3. 校验</b><span>通过</span><em></em></li><li><b>4. 修补</b><span>无</span><em></em></li><li><b>5. 执行</b><span>免票</span><em>未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观</em></li><li><b>6. 对照</b><span>种草 free / 首数 free / 消融 free</span><em>未配置模型接口，草案来自离线抽取</em></li></ol>
+<p class="note">该馆三路读法：种草 免票 ·
+首个数 免票 ·
+消融 免票 ·
+编译执行 <b>免票</b>
+（已核对官网：是）</p>
 <h2>逐条结果</h2>
 <table><tr><th>馆</th><th>切分</th><th>核对</th><th>标注</th><th>种草</th><th>首个数</th><th>编译</th><th>错因</th></tr><tr><td>and-plain</td><td>train</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>both-gate</td><td>train</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>bundle-show</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突、仅售套票</td></tr><tr><td>cm-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>either-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>gugong</td><td>train</td><td>已核对</td><td>免票</td><td>免票</td><td>免票</td><td class='compiled'>免票</td><td>—</td></tr><tr><td>height-park</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>heldout-board</td><td>heldout</td><td>例句</td><td>无标注</td><td>免票</td><td>全票</td><td class='compiled'>全票</td><td>没有可执行门槛、种草冲突</td></tr><tr><td>heldout-both</td><td>heldout</td><td>例句</td><td>全票</td><td>半票</td><td>全票</td><td class='compiled'>全票</td><td>双门槛</td></tr><tr><td>heldout-inclusive</td><td>heldout</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>heldout-river</td><td>heldout</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>tech-museum</td><td>train</td><td>已核对</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr><tr><td>yi-mi</td><td>train</td><td>例句</td><td>半票</td><td>免票</td><td>全票</td><td class='compiled'>半票</td><td>种草冲突</td></tr></table>
 <p class="note">分母只含有标注票种的馆。立牌页没有数字，不进准确率。已核对馆目前只有故宫和中国科学技术馆。其余是规则类型例句。</p>
