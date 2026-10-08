@@ -44,6 +44,37 @@ def main() -> None:
     print(text)
 
 
+# 六步轨迹只对一条代表性样例落盘：报告要它来做「报告与演示用同一套名字」
+# 的对照，而全量 trace 会把 latest.json 撑大到不适合提交。
+TRACE_SAMPLE = "gugong"
+
+
+def _trace_sample() -> dict:
+    """Re-run one venue and return its six-stage trace for the report page.
+
+    Step names come from `flow.compile_and_run` verbatim — the report and the
+    live demo therefore read the same strings instead of two hand-maintained
+    vocabularies (issue #5).
+    """
+    for venue in list_venues():
+        if venue.get("id") == TRACE_SAMPLE:
+            gold = venue.get("gold") or {}
+            result = compile_and_run(
+                venue, gold.get("age", 7), gold.get("height_m", 1.3)
+            )
+            return {
+                "id": venue["id"],
+                "name": venue.get("name"),
+                "verified": bool(venue.get("verified")),
+                "compiled": result["compiled"]["ticket"],
+                "keyword": result["baseline_ticket"],
+                "first_number": result["first_number_ticket"],
+                "ablation": result["ablation_ticket"],
+                "stages": result["trace"],
+            }
+    return {}
+
+
 def _summarize(rows: list[dict]) -> dict:
     scored = [row for row in rows if row["gold"]]
     heldout = [row for row in scored if row["split"] == "heldout"]
@@ -66,6 +97,7 @@ def _summarize(rows: list[dict]) -> dict:
         "verified_compiled_accuracy": _rate(verified, "compiled_correct"),
         "error_counts": counts,
         "error_labels": LABELS,
+        "trace_sample": _trace_sample(),
         "rows": rows,
         "note": "分母只含有标注票种的馆。立牌页没有数字，不进准确率。已核对馆目前只有故宫和中国科学技术馆。其余是规则类型例句。",
     }
