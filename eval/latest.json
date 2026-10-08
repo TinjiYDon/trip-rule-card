@@ -25,6 +25,47 @@
     "release_miss": "放票时刻没读到",
     "schema_issue": "结构校验未通过"
   },
+  "trace_sample": {
+    "id": "gugong",
+    "name": "故宫博物院",
+    "verified": true,
+    "compiled": "free",
+    "keyword": "free",
+    "first_number": "free",
+    "ablation": "free",
+    "stages": [
+      {
+        "stage": "分句",
+        "summary": "3 句",
+        "detail": "未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观 / 18周岁以上学生凭学生证可购学生票 / 不售当日票，门票于参观前7日20:00开始预约"
+      },
+      {
+        "stage": "抽槽",
+        "summary": "判定方式 age",
+        "detail": "未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观"
+      },
+      {
+        "stage": "校验",
+        "summary": "通过",
+        "detail": ""
+      },
+      {
+        "stage": "修补",
+        "summary": "无",
+        "detail": ""
+      },
+      {
+        "stage": "执行",
+        "summary": "免票",
+        "detail": "未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观"
+      },
+      {
+        "stage": "对照",
+        "summary": "种草 free / 首数 free / 消融 free",
+        "detail": "未配置模型接口，草案来自离线抽取"
+      }
+    ]
+  },
   "rows": [
     {
       "id": "and-plain",
