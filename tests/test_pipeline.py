@@ -110,5 +110,43 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("no_threshold", tags)
 
 
+class TraceReportTests(unittest.TestCase):
+    """锁住 flow → run_eval → render_report 这条链路（issue #5）。
+
+    断过一次：run_eval 丢弃了 flow 的 trace，报告页因此没有六步轨迹，
+    与演示页各用一套手写名字，答辩截图会和对不上。
+    """
+
+    STAGES = ["分句", "抽槽", "校验", "修补", "执行", "对照"]
+
+    def test_flow_trace_has_six_ordered_stages(self):
+        venue = get_venue("gugong")
+        trace = compile_and_run(venue, 7, 1.3)["trace"]
+        self.assertEqual([s["stage"] for s in trace], self.STAGES)
+
+    def test_trace_sample_is_persisted_and_matches_flow(self):
+        from eval.run_eval import _trace_sample
+
+        sample = _trace_sample()
+        self.assertTrue(sample, "trace_sample 不应为空")
+        self.assertEqual([s["stage"] for s in sample["stages"]], self.STAGES)
+
+    def test_report_renders_trace_stage_names(self):
+        import json
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parents[1]
+        latest = root / "eval" / "latest.json"
+        html = root / "docs" / "report.html"
+        if not latest.exists():
+            self.skipTest("latest.json 尚未生成")
+        data = json.loads(latest.read_text(encoding="utf-8"))
+        self.assertIn("trace_sample", data, "latest.json 必须落trace_sample")
+        if html.exists():
+            text = html.read_text(encoding="utf-8")
+            for stage in self.STAGES:
+                self.assertIn(stage, text, f"报告页缺少步骤「{stage}」")
+
+
 if __name__ == "__main__":
     unittest.main()
