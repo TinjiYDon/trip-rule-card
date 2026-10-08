@@ -9,6 +9,7 @@
 ```powershell
 cd rule-card
 python eval/check_corpus.py
+python eval/corpus_gap.py
 python -m unittest tests.test_pipeline
 python eval/run_eval.py
 python eval/render_report.py
@@ -16,6 +17,8 @@ python demo/server.py
 ```
 
 浏览器打开 http://127.0.0.1:8765 。评测报告在 `docs/report.html`。
+
+`eval/corpus_gap.py` 是标注同学的进度表：它把 [分工](docs/分工.md) 里「约 30 条、约 8 条 heldout」的目标换算成还差多少，并按「必须修 / 省力 / 工作量」排序。它只读语料，不生成任何票务内容——票价仍须从当天官网原文抄入。
 
 当前 13 条页面，其中 12 条有标注票种。在这 12 条上：只看种草 0.083，只读第一个数字 0.333，编译执行 1.0。留出且有标注的 3 条：种草 0，首个数 0.333，编译 1.0。另有 1 条立牌页没有数字，不进分母，错因是「没有可执行门槛」。已核对官网的只有故宫、中国科学技术馆。其余是规则类型例句。这些数字只说明当前句式上三条读法的差距，不能写成全国成绩。换官网原文后以重新运行 `eval/run_eval.py` 为准。
 
