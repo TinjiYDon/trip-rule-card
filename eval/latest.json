@@ -1,20 +1,21 @@
 {
-  "n_files": 13,
-  "n_scored": 12,
-  "keyword_accuracy": 0.083,
+  "n_files": 16,
+  "n_scored": 15,
+  "keyword_accuracy": 0.133,
   "first_number_accuracy": 0.333,
   "compiled_accuracy": 1.0,
-  "heldout_n": 3,
+  "heldout_n": 4,
   "heldout_keyword_accuracy": 0.0,
-  "heldout_first_number_accuracy": 0.333,
+  "heldout_first_number_accuracy": 0.25,
   "heldout_compiled_accuracy": 1.0,
-  "verified_n": 2,
+  "verified_n": 5,
   "verified_compiled_accuracy": 1.0,
   "error_counts": {
     "dual_threshold": 3,
-    "promo_conflict": 9,
+    "promo_conflict": 11,
     "bundle": 1,
-    "no_threshold": 1
+    "no_threshold": 1,
+    "release_miss": 1
   },
   "error_labels": {
     "promo_conflict": "种草冲突",
@@ -118,6 +119,21 @@
         "bundle"
       ],
       "mode": "height"
+    },
+    {
+      "id": "chnmuseum",
+      "split": "train",
+      "verified": true,
+      "gold": "free",
+      "keyword": "free",
+      "first_number": "free",
+      "ablation": "free",
+      "compiled": "free",
+      "keyword_correct": true,
+      "first_number_correct": true,
+      "compiled_correct": true,
+      "errors": [],
+      "mode": "age"
     },
     {
       "id": "cm-park",
@@ -253,6 +269,41 @@
         "promo_conflict"
       ],
       "mode": "height"
+    },
+    {
+      "id": "oriental-pearl",
+      "split": "heldout",
+      "verified": true,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
+      "compiled_correct": true,
+      "errors": [
+        "promo_conflict",
+        "release_miss"
+      ],
+      "mode": "either"
+    },
+    {
+      "id": "shanghai-museum",
+      "split": "train",
+      "verified": true,
+      "gold": "half",
+      "keyword": "free",
+      "first_number": "full",
+      "ablation": "half",
+      "compiled": "half",
+      "keyword_correct": false,
+      "first_number_correct": false,
+      "compiled_correct": true,
+      "errors": [
+        "promo_conflict"
+      ],
+      "mode": "age"
     },
     {
       "id": "tech-museum",

@@ -33,9 +33,21 @@ def extract_rule(page_text: str, promo_text: str = "") -> dict:
     promo = prepare_text(promo_text)
     free_h, half_h, free_h_incl, half_h_incl = _heights(text)
     free_age, half_age, free_age_incl, half_age_incl = _ages(text)
+    free_h, half_h, free_h_incl, half_h_incl = _height_ranges(
+        text, free_h, half_h, free_h_incl, half_h_incl
+    )
+    free_age, half_age, free_age_incl, half_age_incl = _age_ranges(
+        text, free_age, half_age, free_age_incl, half_age_incl
+    )
+    if "免费预约" in text or "进行免费预约" in text:
+        # 全馆免费预约时，年龄句里的「未成年人须代约」不是免票门槛
+        free_age, free_age_incl = 200, True
+        half_age, half_age_incl = None, False
     days = _first_int(r"提前\s*(\d+)\s*天", text)
     if days is None:
         days = _first_int(r"(\d+)\s*日前", text)
+    if days is None:
+        days = _first_int(r"提前\s*(\d+)\s*日内", text)
     bundle_only = any(token in text for token in ("仅售套票", "不卖散票", "散客大门票已下架", "单独大门票"))
     return {
         "mode": _mode(text),
@@ -130,6 +142,57 @@ def _ages(text: str) -> tuple[int | None, int | None, bool, bool]:
         elif kind == "half" and half is None:
             half = age
             half_incl = inclusive
+    return free, half, free_incl, half_incl
+
+
+def _height_ranges(
+    text: str,
+    free: float | None,
+    half: float | None,
+    free_incl: bool,
+    half_incl: bool,
+) -> tuple[float | None, float | None, bool, bool]:
+    exclusive_free = re.search(
+        r"(\d+(?:\.\d+)?)\s*米\s*\(不含\)\s*以下[^。]{0,12}(?:免费|免票)",
+        text,
+    )
+    if exclusive_free:
+        free = float(exclusive_free.group(1))
+        free_incl = False
+    under_free = re.search(
+        r"(\d+(?:\.\d+)?)\s*米\s*\(不含\)\s*以下[^。]{0,6}免费",
+        text,
+    )
+    if under_free:
+        free = float(under_free.group(1))
+        free_incl = False
+    band = re.search(
+        r"(\d+(?:\.\d+)?)\s*米\s*\(含\)\s*[-~－—至到]\s*(\d+(?:\.\d+)?)\s*米\s*\(含\)",
+        text,
+    )
+    if band:
+        half = float(band.group(2))
+        half_incl = True
+        if free is None:
+            free = float(band.group(1))
+            free_incl = False
+    return free, half, free_incl, half_incl
+
+
+def _age_ranges(
+    text: str,
+    free: int | None,
+    half: int | None,
+    free_incl: bool,
+    half_incl: bool,
+) -> tuple[int | None, int | None, bool, bool]:
+    span = re.search(r"(\d+)\s*周岁以上[、,，]\s*(\d+)\s*周岁及以下", text)
+    if span and ("优惠" in text or "半" in text or "半价" in text):
+        half = int(span.group(2))
+        half_incl = True
+        if free is None:
+            free = int(span.group(1))
+            free_incl = False
     return free, half, free_incl, half_incl
 
 

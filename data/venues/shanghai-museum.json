@@ -1,0 +1,11 @@
+{
+  "id": "shanghai-museum",
+  "name": "上海博物馆特展优待",
+  "city": "上海",
+  "split": "train",
+  "verified": true,
+  "source": "https://www.shanghaimuseum.net/mu/frontend/pg/article/id/I00004707 特展票务优待政策",
+  "page_text": "6周岁(含)以下的儿童享受免票优待，一名成人可携带一名免票儿童。60周岁(含)以上的老年人，6周岁以上、18周岁及以下的未成年人，全日制大学本科及以下学历学生实行优惠票。展览于开放购票日16:00起可购30天内门票。",
+  "promo_text": "上博特展小孩都免票。",
+  "gold": {"age": 7, "height_m": 1.3, "ticket": "half"}
+}

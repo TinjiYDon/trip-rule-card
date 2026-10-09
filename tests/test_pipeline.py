@@ -56,6 +56,25 @@ class ExtractTests(unittest.TestCase):
         edge, _ = judge_ticket(rule, 8, 1.5)
         self.assertEqual(edge, "free")
 
+    def test_national_museum_all_free_booking(self):
+        venue = get_venue("chnmuseum")
+        result = compile_and_run(venue, 7, 1.3)
+        self.assertEqual(result["compiled"]["ticket"], "free")
+        self.assertEqual(result["baseline_ticket"], "free")
+
+    def test_shanghai_museum_age_band(self):
+        venue = get_venue("shanghai-museum")
+        result = compile_and_run(venue, 7, 1.3)
+        self.assertEqual(result["compiled"]["ticket"], "half")
+        self.assertEqual(result["baseline_ticket"], "free")
+
+    def test_oriental_pearl_heldout(self):
+        venue = get_venue("oriental-pearl")
+        result = compile_and_run(venue, 7, 1.25)
+        self.assertEqual(result["compiled"]["ticket"], "half")
+        self.assertTrue(result["verified"])
+        self.assertEqual(result["baseline_ticket"], "free")
+
     def test_conjunction_without_the_phrase(self):
         venue = get_venue("and-plain")
         rule = extract_rule(venue["page_text"], "")

@@ -1,0 +1,11 @@
+{
+  "id": "oriental-pearl",
+  "name": "东方明珠",
+  "city": "上海",
+  "split": "heldout",
+  "verified": true,
+  "source": "https://you.ctrip.com/sight/shanghai2/762.html 景点页公开优待政策；购票以东方明珠官方公众号为准",
+  "page_text": "儿童:1米(不含)以下，免费；身高1米(含)-1.3米(含)或年龄6周岁(含)以下，半价。须实名购票并预约通行码。",
+  "promo_text": "一米三以下儿童免费登塔。",
+  "gold": {"age": 7, "height_m": 1.25, "ticket": "half"}
+}
