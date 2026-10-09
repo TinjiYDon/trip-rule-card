@@ -1,4 +1,4 @@
-"""演示服务。演示同学只改 demo/。"""
+"""演示服务。默认打开与线上一致的 LIVE DEMO（多人、少打字）。"""
 
 from __future__ import annotations
 
@@ -15,15 +15,26 @@ from rulecard.load import get_venue, list_venues
 from rulecard.pipeline import compile_and_run
 
 DEMO_DIR = Path(__file__).resolve().parent
+LIVE_DIR = ROOT / "docs" / "live"
 PORT = 8765
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         path = urlparse(self.path).path
-        if path in ("/", "/index.html"):
-            self._file(DEMO_DIR / "index.html", "text/html; charset=utf-8")
+        if path in ("/", "/index.html", "/live", "/live/"):
+            # 优先静态 LIVE（与 GitHub Pages 同源体验）
+            live = LIVE_DIR / "index.html"
+            target = live if live.exists() else DEMO_DIR / "live.html"
+            self._file(target, "text/html; charset=utf-8")
             return
+        if path.endswith(".js"):
+            name = Path(path).name
+            for folder in (LIVE_DIR, DEMO_DIR):
+                candidate = folder / name
+                if candidate.exists():
+                    self._file(candidate, "application/javascript; charset=utf-8")
+                    return
         if path == "/api/venues":
             payload = [
                 {
@@ -35,8 +46,7 @@ class Handler(BaseHTTPRequestHandler):
                     "source": venue.get("source") or "",
                     "promo_text": venue.get("promo_text") or "",
                     "page_text": venue.get("page_text") or "",
-                    "age": (venue.get("gold") or {}).get("age", 7),
-                    "height_m": (venue.get("gold") or {}).get("height_m", 1.3),
+                    "gold": venue.get("gold"),
                 }
                 for venue in list_venues()
             ]
