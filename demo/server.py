@@ -11,7 +11,9 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from rulecard.intent import parse_intent
 from rulecard.load import get_venue, list_venues
+from rulecard.order import build_order_card
 from rulecard.pipeline import compile_and_run
 
 DEMO_DIR = Path(__file__).resolve().parent
@@ -55,11 +57,23 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
     def do_POST(self) -> None:
-        if urlparse(self.path).path != "/api/run":
-            self.send_error(404)
-            return
+        path = urlparse(self.path).path
         length = int(self.headers.get("Content-Length", "0"))
         body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
+        if path == "/api/intent":
+            self._json(parse_intent(body.get("text") or "", list_venues()))
+            return
+        if path == "/api/order":
+            venue = get_venue(body["id"])
+            if "promo_text" in body:
+                venue = {**venue, "promo_text": body.get("promo_text") or ""}
+            if "page_text" in body and body.get("page_text") != venue.get("page_text"):
+                venue = {**venue, "page_text": body.get("page_text") or "", "gold": None, "verified": False}
+            self._json(build_order_card(venue, body.get("travelers") or [], body.get("visit_date")))
+            return
+        if path != "/api/run":
+            self.send_error(404)
+            return
         venue = get_venue(body["id"])
         if "promo_text" in body:
             venue = {**venue, "promo_text": body.get("promo_text") or ""}

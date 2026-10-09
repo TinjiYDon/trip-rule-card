@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from rulecard.coverage import rule_coverage
 from rulecard.direct import drop_and_ticket, first_number_ticket, keyword_ticket
 from rulecard.errors import classify
 from rulecard.execute import run_rule
@@ -19,6 +20,7 @@ def compile_and_run(venue: dict, age: int, height_m: float, benefits: list[str] 
     proposed = extract_rule(page, promo)
     issues = validate_rule(proposed)
     rule, repairs = repair_rule(proposed, page)
+    coverage = rule_coverage(page, rule)
     compiled = run_rule(rule, age, height_m, benefits or [])
     keyword, keyword_why = keyword_ticket(promo, page)
     first, first_why = first_number_ticket(page, age, height_m)
@@ -56,6 +58,7 @@ def compile_and_run(venue: dict, age: int, height_m: float, benefits: list[str] 
         "errors": tags,
         "schema_issues": issues,
         "repairs": repairs,
+        "coverage": coverage,
         "segments": clauses,
         "trace": trace,
     }

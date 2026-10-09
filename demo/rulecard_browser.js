@@ -28,11 +28,11 @@
   }
 
   function kind(local, sentence) {
-    if (local.includes("半")) return "half";
-    if (/免|不收|免费/.test(local)) return "free";
-    if (local.includes("优惠") && !local.includes("免")) return "half";
+    if (/半|半票|半价/.test(local)) return "half";
+    if (sentence.includes("优惠票") || (local.includes("优惠") && !local.includes("免"))) return "half";
+    if (/免|不收|免费/.test(local) && !local.includes("优惠")) return "free";
     if (/免|不收|免费/.test(sentence) && !sentence.includes("半") && !sentence.includes("优惠")) return "free";
-    if (sentence.includes("半") || (sentence.includes("优惠") && !sentence.includes("免"))) return "half";
+    if (sentence.includes("半") || (sentence.includes("优惠") && !sentence.includes("免票"))) return "half";
     return null;
   }
 
@@ -150,6 +150,7 @@
     const clauseTicket =
       sentenceWith(text, ["二选一", "同时满足", "缺一不可", "满足其一", "且"]) ||
       sentenceWith(text, ["免票", "半票", "免费", "优惠", "周岁", "米"]);
+    const party = partyConstraints(text);
     return {
       mode: modeOf(text),
       free_height_m: h.free,
@@ -160,6 +161,8 @@
       half_height_inclusive: h.halfIncl,
       free_age_inclusive: a.freeIncl,
       half_age_inclusive: a.halfIncl,
+      free_children_per_adult: party.quota,
+      escort_required_under_age: party.escort,
       release_days_ahead: days,
       release_clock: clockM ? clockM[1] : null,
       no_show_note: /未履约|爽约/.test(text) ? sentenceWith(text, ["未履约", "爽约"]) : "",
@@ -178,6 +181,28 @@
       clause_benefit: sentenceWith(text, ["不能叠加", "不可同时", "学生票"]),
       clause_onsale: sentenceWith(text, ["套票", "散票", "下架", "元"]),
     };
+  }
+
+  function partyConstraints(text) {
+    let quota = null;
+    let escort = null;
+    const patterns = [
+      /(?:1|一)名成人限携\s*(\d+)\s*名/,
+      /每名成人最多带\s*(\d+)\s*名/,
+      /1名成人可带\s*(\d+)\s*名/,
+    ];
+    for (const pattern of patterns) {
+      const m = text.match(pattern);
+      if (m) {
+        quota = Number(m[1]);
+        break;
+      }
+    }
+    if (/一名成人可携带一名/.test(text)) quota = 1;
+    const em = text.match(/未满\s*(\d+)\s*周岁[^。]{0,24}(?:须|需)(?:由)?成年人/);
+    if (em) escort = Number(em[1]);
+    else if (/须有成人陪同|须由成年人代/.test(text)) escort = 14;
+    return { quota, escort };
   }
 
   function under(value, bound, inclusive) {
@@ -359,5 +384,116 @@
     };
   }
 
-  global.RuleCardBrowser = { compileAndRun, extractRule, LABEL };
+  function buildOrderCard(venue, travelers) {
+    const page = venue.page_text || "";
+    const promo = venue.promo_text || "";
+    const rule = extractRule(page, promo);
+    const perPerson = (travelers || []).map((person, index) => {
+      const age = Number(person.age || 7);
+      const height = Number(person.height_m || 1.3);
+      const benefits = person.student || (person.tags || []).includes("student") ? ["child", "student"] : [];
+      const compiled = runRule(rule, age, height, benefits);
+      const [keyword] = keywordTicket(promo, page);
+      return {
+        id: person.id || "p" + (index + 1),
+        name: person.name || person.id || "出行人",
+        age,
+        height_m: height,
+        ticket: compiled.ticket,
+        ticket_label: compiled.ticket_label,
+        clause: compiled.ticket_clause,
+        promo_conflict: !!compiled.promo.conflict,
+        benefits_ok: !!compiled.benefits.ok,
+        compiled,
+        baseline_ticket: keyword,
+      };
+    });
+    const summary = {
+      free: perPerson.filter((p) => p.ticket === "free").length,
+      half: perPerson.filter((p) => p.ticket === "half").length,
+      full: perPerson.filter((p) => p.ticket === "full").length,
+      n: perPerson.length,
+    };
+    const blockers = [];
+    const escortAge = rule.escort_required_under_age;
+    if (escortAge != null) {
+      const adults = perPerson.filter((p) => p.age >= escortAge);
+      const minors = perPerson.filter((p) => p.age < escortAge);
+      if (minors.length && !adults.length) {
+        blockers.push({ code: "escort_required", message: `未满 ${escortAge} 周岁须由成年人陪同/代约，当前没有成人` });
+      }
+    }
+    const quota = rule.free_children_per_adult;
+    if (quota != null) {
+      const adults = perPerson.filter((p) => p.age >= 18);
+      const freeKids = perPerson.filter((p) => p.ticket === "free" && p.age < 18);
+      if (adults.length && freeKids.length > adults.length * quota) {
+        blockers.push({
+          code: "quota_exceeded",
+          message: `免票儿童 ${freeKids.length} 人，超过每成人可带 ${quota} 人（成人 ${adults.length}）`,
+        });
+      }
+    }
+    if (perPerson.some((p) => p.promo_conflict)) {
+      blockers.push({ code: "promo_conflict", message: "种草宣称免票，但至少一位出行人按条款不是免票" });
+    }
+    const parts = [];
+    if (summary.free) parts.push(`${summary.free} 人免票`);
+    if (summary.half) parts.push(`${summary.half} 人半票`);
+    if (summary.full) parts.push(`${summary.full} 人全票`);
+    return {
+      venue_id: venue.id,
+      name: venue.name,
+      rule,
+      per_person: perPerson,
+      summary,
+      summary_text: parts.join("，") || "未算出票种",
+      blockers,
+      release: perPerson[0] ? perPerson[0].compiled.release : "页面未写放票时刻",
+      can_book: !blockers.some((b) => b.code === "escort_required" || b.code === "quota_exceeded"),
+      promo_conflict_any: perPerson.some((p) => p.promo_conflict),
+    };
+  }
+
+  function parseIntent(text, venues) {
+    const raw = String(text || "").trim();
+    const alias = [
+      [["科技馆", "科学技术馆"], "tech-museum"],
+      [["故宫", "紫禁城"], "gugong"],
+      [["国博", "国家博物馆"], "chnmuseum"],
+      [["东方明珠", "明珠", "登塔"], "oriental-pearl"],
+      [["上博", "上海博物馆", "特展"], "shanghai-museum"],
+    ];
+    let venueId = null;
+    for (const [keys, id] of alias) {
+      if (keys.some((k) => raw.includes(k)) && venues.some((v) => v.id === id)) {
+        venueId = id;
+        break;
+      }
+    }
+    let members = null;
+    if (/一家三口|三口/.test(raw)) members = [["成人", 35, 1.7], ["儿童", 7, 1.3], ["幼童", 5, 1.1]];
+    else if (/亲子|带娃|孩子|小孩|儿童/.test(raw)) members = [["成人", 35, 1.7], ["儿童", 7, 1.3]];
+    else if (/本人|自己/.test(raw)) members = [["成人", 28, 1.7]];
+    else members = [["成人", 35, 1.7], ["儿童", 7, 1.3]];
+    const counts = {};
+    const travelers = members.map(([role, age, height]) => {
+      counts[role] = (counts[role] || 0) + 1;
+      return { id: role + counts[role], name: role + counts[role], age, height_m: height, tags: [] };
+    });
+    const ages = [...raw.matchAll(/(\d+)\s*岁/g)].map((m) => Number(m[1]));
+    const heights = [...raw.matchAll(/(\d+(?:\.\d+)?)\s*米/g)].map((m) => Number(m[1]));
+    travelers.forEach((t, i) => {
+      if (ages[i] != null) t.age = ages[i];
+      if (heights[i] != null) t.height_m = heights[i];
+    });
+    const name = (venues.find((v) => v.id === venueId) || {}).name;
+    const who = travelers.map((t) => `${t.name}(${t.age}岁/${t.height_m}米)`).join("、");
+    let reply;
+    if (venueId && name) reply = `好的，按「${name}」给 ${who} 算票。条款已带入，不用再粘贴。`;
+    else reply = `先按 ${who} 准备。再说一下去哪个馆？（科技馆/故宫/国博/东方明珠/上博）`;
+    return { venue_id: venueId, travelers, reply, raw };
+  }
+
+  global.RuleCardBrowser = { compileAndRun, extractRule, buildOrderCard, parseIntent, LABEL };
 })(typeof window !== "undefined" ? window : globalThis);

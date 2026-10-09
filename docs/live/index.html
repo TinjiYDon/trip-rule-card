@@ -3,203 +3,180 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>规则卡 · 订前看清楚</title>
+  <title>规则卡 · 一句话算票</title>
   <style>
     :root {
-      --ink: #141c2b;
-      --muted: #667085;
-      --line: #e6eaf0;
-      --blue: #0b5fff;
-      --bg: #eef2f6;
-      --ok: #0f766e;
-      --bad: #b42318;
-      --paper: #ffffff;
-      --soft: #f5f8fc;
+      --ink:#141c2b; --muted:#667085; --line:#e6eaf0; --blue:#0b5fff; --bg:#eef2f6;
+      --ok:#0f766e; --bad:#b42318; --paper:#fff; --soft:#f5f8fc;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background:
-        radial-gradient(900px 420px at 10% -10%, #d9e7ff 0%, transparent 55%),
-        radial-gradient(700px 360px at 100% 0%, #e8f6f2 0%, transparent 50%),
-        var(--bg);
       color: var(--ink);
+      background: radial-gradient(900px 420px at 8% -8%, #d9e7ff 0%, transparent 55%), var(--bg);
     }
-    header { padding: 28px 28px 8px; max-width: 1100px; margin: 0 auto; }
-    .eyebrow { color: var(--blue); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }
-    header h1 { margin: 6px 0 0; font-size: 30px; letter-spacing: -0.02em; }
-    header p { margin: 8px 0 0; color: var(--muted); font-size: 15px; max-width: 640px; line-height: 1.55; }
-    main {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 16px;
-      padding: 16px 28px 40px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 48px; }
+    .eyebrow { color: var(--blue); font-size: 13px; font-weight: 600; }
+    h1 { margin: 6px 0 0; font-size: 28px; letter-spacing: -0.02em; }
+    .lead { color: var(--muted); margin: 8px 0 18px; line-height: 1.5; }
+    .chat {
+      background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 14px;
+      box-shadow: 0 10px 30px rgba(20,28,43,.04); margin-bottom: 14px;
     }
-    @media (max-width: 920px) { main { grid-template-columns: 1fr; padding: 12px 16px 32px; } header { padding: 20px 16px 4px; } header h1 { font-size: 24px; } }
+    .log { display: grid; gap: 10px; max-height: 220px; overflow: auto; padding: 4px; margin-bottom: 10px; }
+    .bubble { max-width: 92%; padding: 10px 12px; border-radius: 14px; font-size: 14px; line-height: 1.45; }
+    .bubble.bot { background: var(--soft); border: 1px solid var(--line); }
+    .bubble.user { background: #e8f0ff; border: 1px solid #c9daff; margin-left: auto; }
+    .composer { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .composer input {
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font: inherit;
+    }
+    .composer button, .cta {
+      border: 0; border-radius: 12px; padding: 12px 16px; background: linear-gradient(135deg,#0b5fff,#0a4ed1);
+      color: #fff; font: inherit; font-weight: 650; cursor: pointer;
+    }
+    .hints { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .hint {
+      border: 1px solid var(--line); background: var(--soft); border-radius: 999px;
+      padding: 6px 12px; font-size: 13px; cursor: pointer;
+    }
+    .grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 14px; }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 22px; } }
     .panel {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 18px 20px;
-      box-shadow: 0 10px 30px rgba(20, 28, 43, 0.04);
+      background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+      box-shadow: 0 10px 30px rgba(20,28,43,.04);
     }
-    h2 { margin: 0 0 12px; font-size: 16px; }
-    label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 6px; }
-    select, textarea, input[type="number"], input[type="text"] {
-      width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: inherit; background: #fff;
+    h2 { margin: 0 0 10px; font-size: 16px; }
+    label { display:block; font-size:12px; color: var(--muted); margin: 0 0 6px; }
+    select, textarea, input[type=number] {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: inherit;
     }
-    textarea { min-height: 70px; resize: vertical; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
-    .chip, .ghost {
-      border: 1px solid var(--line); background: var(--soft); color: var(--ink);
-      border-radius: 999px; padding: 7px 12px; font: inherit; cursor: pointer; font-size: 13px;
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0; }
+    .chip {
+      border: 1px solid var(--line); background: var(--soft); border-radius: 999px;
+      padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer;
     }
-    .chip:hover, .ghost:hover { border-color: #b7c7e6; }
-    .chip.primary { background: #e8f0ff; border-color: #c9daff; color: var(--blue); font-weight: 600; }
-    .people { display: grid; gap: 10px; margin-top: 10px; }
-    .person {
-      border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: var(--soft);
-      display: grid; gap: 8px;
-    }
-    .person-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .person-top strong { font-size: 14px; }
-    .person-grid { display: grid; grid-template-columns: 1fr 1.2fr auto; gap: 10px; align-items: end; }
-    @media (max-width: 640px) { .person-grid { grid-template-columns: 1fr 1fr; } .person-grid .check { grid-column: 1 / -1; } }
-    .check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); padding-bottom: 8px; }
-    .remove { border: 0; background: transparent; color: var(--bad); cursor: pointer; font-size: 13px; }
-    details.terms {
-      margin-top: 14px; border: 1px dashed #d5dbe5; border-radius: 12px; padding: 10px 12px; background: #fbfcfe;
-    }
-    details.terms summary { cursor: pointer; color: var(--muted); font-size: 13px; }
-    .cta {
-      margin-top: 16px; width: 100%; border: 0; border-radius: 12px; padding: 14px 16px;
-      background: linear-gradient(135deg, #0b5fff, #0a4ed1); color: #fff; font: inherit; font-size: 16px; font-weight: 650; cursor: pointer;
-    }
+    .chip.primary { background:#e8f0ff; border-color:#c9daff; color:var(--blue); font-weight:600; }
+    .people { display:grid; gap:8px; }
+    .person { border:1px solid var(--line); border-radius:12px; padding:10px; background:var(--soft); }
+    .person-top { display:flex; justify-content:space-between; align-items:center; }
+    .person-grid { display:grid; grid-template-columns:1fr 1.2fr auto; gap:8px; align-items:end; margin-top:8px; }
+    .remove { border:0; background:transparent; color:var(--bad); cursor:pointer; font-size:13px; }
+    .check { display:flex; gap:6px; align-items:center; font-size:13px; color:var(--muted); padding-bottom:6px; }
+    details.terms { margin-top:12px; border:1px dashed #d5dbe5; border-radius:12px; padding:10px 12px; }
+    details.terms summary { cursor:pointer; color:var(--muted); font-size:13px; }
     .summary {
-      border-radius: 14px; padding: 14px 16px; background: linear-gradient(135deg, #102a56, #1a3f86); color: #fff; margin-bottom: 12px;
+      border-radius:14px; padding:14px 16px; background:linear-gradient(135deg,#102a56,#1a3f86); color:#fff; margin-bottom:12px;
     }
-    .summary .big { font-size: 20px; font-weight: 700; margin-top: 4px; }
-    .summary .sub { opacity: 0.85; font-size: 13px; margin-top: 6px; }
-    .result-list { display: grid; gap: 8px; margin-bottom: 12px; }
-    .result {
-      border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; grid-template-columns: 1fr auto; gap: 6px;
-    }
-    .result .who { font-weight: 650; }
-    .result .meta { color: var(--muted); font-size: 12px; grid-column: 1 / -1; }
-    .ticket-tag { font-weight: 700; color: var(--blue); font-size: 18px; }
+    .summary .big { font-size:20px; font-weight:700; margin-top:4px; }
+    .summary .sub { opacity:.88; font-size:13px; margin-top:6px; }
+    .result-list { display:grid; gap:8px; margin-bottom:12px; }
+    .result { border:1px solid var(--line); border-radius:12px; padding:12px; display:grid; grid-template-columns:1fr auto; gap:4px; }
+    .ticket-tag { font-weight:700; color:var(--blue); font-size:18px; }
     .ticket-tag.bad { color: var(--bad); }
-    .cells { display: grid; gap: 8px; }
-    .cell { border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: #fff; }
-    .cell b { display: block; font-size: 13px; margin-bottom: 4px; }
-    .ok { background: #f2fbf8; border-color: #c7e8df; }
-    .bad { background: #fff5f3; border-color: #f0c7c1; }
-    .muted { color: var(--muted); font-size: 12px; margin-top: 6px; }
-    .warn { font-size: 12px; color: var(--muted); margin-top: 8px; }
-    .trace { margin-top: 12px; }
-    .step { display: grid; grid-template-columns: 64px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
-    .step b { color: var(--blue); }
-    .source { font-size: 12px; color: var(--muted); margin-top: 6px; word-break: break-all; }
+    .meta { color:var(--muted); font-size:12px; grid-column:1/-1; }
+    .cells { display:grid; gap:8px; }
+    .cell { border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .ok { background:#f2fbf8; border-color:#c7e8df; }
+    .bad { background:#fff5f3; border-color:#f0c7c1; }
+    .muted { color:var(--muted); font-size:12px; margin-top:6px; }
+    .warn { font-size:12px; color:var(--muted); }
+    .blockers { display:grid; gap:6px; margin-bottom:10px; }
+    .blocker { background:#fff5f3; border:1px solid #f0c7c1; color:var(--bad); border-radius:10px; padding:8px 10px; font-size:13px; }
+    .source { font-size:12px; color:var(--muted); margin-top:6px; word-break:break-all; }
   </style>
 </head>
 <body>
-  <header>
+  <div class="wrap">
     <div class="eyebrow">预订前 · 规则卡</div>
-    <h1>先看清这几个人怎么买，再点立即预订</h1>
-    <p>选景区、带上家人，不用抄条款。系统读票务页，告诉每个人算什么票、种草靠不靠谱、几点放票。</p>
-  </header>
-  <main>
-    <section class="panel">
-      <h2>1. 去哪玩</h2>
-      <label for="venue">景区</label>
-      <select id="venue"></select>
-      <p class="source" id="source"></p>
+    <h1>一句话带上家人，算清楚怎么买</h1>
+    <p class="lead">先说话，再微调。条款自动带入，不用复制粘贴。结论仍由规则编译执行，不是聊天随口说。</p>
 
-      <h2 style="margin-top:18px">2. 带上谁</h2>
-      <div class="chips" id="familyPresets">
-        <button type="button" class="chip primary" data-preset="parent-child">亲子二人</button>
-        <button type="button" class="chip primary" data-preset="family3">一家三口</button>
-        <button type="button" class="chip" data-preset="clear">清空</button>
+    <section class="chat">
+      <div class="log" id="log"></div>
+      <div class="composer">
+        <input id="chatInput" placeholder="例如：带孩子去科技馆，能不能免票？" />
+        <button type="button" id="chatSend">发送</button>
       </div>
-      <div class="chips">
-        <button type="button" class="chip" data-add="adult">+ 成人</button>
-        <button type="button" class="chip" data-add="child">+ 儿童 7岁/1.3米</button>
-        <button type="button" class="chip" data-add="toddler">+ 幼童 5岁/1.1米</button>
-        <button type="button" class="chip" data-add="teen">+ 少年 14岁/1.5米</button>
+      <div class="hints">
+        <button type="button" class="hint" data-q="带孩子去科技馆，能不能免票？">带孩子去科技馆</button>
+        <button type="button" class="hint" data-q="一家三口去东方明珠">一家三口去东方明珠</button>
+        <button type="button" class="hint" data-q="亲子去故宫">亲子去故宫</button>
+        <button type="button" class="hint" data-q="两个孩子去国博，只有大人吗？不，就孩子">国博只有孩子？</button>
       </div>
-      <div class="people" id="people"></div>
-
-      <details class="terms" id="termsBox">
-        <summary>条款与种草（一般不用改，点开可核对）</summary>
-        <label style="margin-top:10px">短视频 / 笔记里的说法</label>
-        <textarea id="promo"></textarea>
-        <label>票务页原文</label>
-        <textarea id="page" style="min-height:120px"></textarea>
-      </details>
-
-      <button class="cta" id="run" type="button">算一下这几个人</button>
-      <p class="warn">改条款原文后，不再显示预存答案，用来证明不是写死馆名。</p>
     </section>
 
-    <section class="panel">
-      <h2>订前结论</h2>
-      <div class="summary" id="summary">
-        <div>本单</div>
-        <div class="big">先添加出行人，再点计算</div>
-        <div class="sub">每人一张票种建议，并标出种草是否靠谱</div>
-      </div>
-      <div class="result-list" id="results"></div>
-      <div class="cells" id="cells"></div>
-      <details class="terms trace">
-        <summary>技术过程（答辩用，日常可忽略）</summary>
-        <div id="trace"></div>
-      </details>
-    </section>
-  </main>
+    <div class="grid">
+      <section class="panel">
+        <h2>行程（可改，一般不用手打）</h2>
+        <label>景区</label>
+        <select id="venue"></select>
+        <p class="source" id="source"></p>
+        <div class="chips">
+          <button type="button" class="chip primary" data-preset="parent-child">亲子二人</button>
+          <button type="button" class="chip primary" data-preset="family3">一家三口</button>
+          <button type="button" class="chip" data-add="adult">+ 成人</button>
+          <button type="button" class="chip" data-add="child">+ 儿童</button>
+          <button type="button" class="chip" data-add="toddler">+ 幼童</button>
+        </div>
+        <div class="people" id="people"></div>
+        <details class="terms">
+          <summary>条款与种草（自动带入，核对时再展开）</summary>
+          <label style="margin-top:10px">种草说法</label>
+          <textarea id="promo"></textarea>
+          <label>票务页原文</label>
+          <textarea id="page" style="min-height:110px"></textarea>
+        </details>
+        <button class="cta" id="run" type="button" style="width:100%;margin-top:12px">按当前出行人重算</button>
+      </section>
+
+      <section class="panel">
+        <h2>订前结论</h2>
+        <div class="summary" id="summary">
+          <div>本单</div>
+          <div class="big">先在上面说一句，或点快捷提示</div>
+          <div class="sub">例如「带孩子去科技馆」</div>
+        </div>
+        <div class="blockers" id="blockers"></div>
+        <div class="result-list" id="results"></div>
+        <div class="cells" id="cells"></div>
+      </section>
+    </div>
+  </div>
 
   <script src="./venues.js"></script>
   <script src="./rulecard_browser.js"></script>
   <script>
+    const venues = window.RULECARD_VENUES || [];
     const venueEl = document.querySelector("#venue");
     const promoEl = document.querySelector("#promo");
     const pageEl = document.querySelector("#page");
     const sourceEl = document.querySelector("#source");
     const peopleEl = document.querySelector("#people");
-    const label = RuleCardBrowser.LABEL;
-    const venues = window.RULECARD_VENUES || [];
+    const logEl = document.querySelector("#log");
+    const chatInput = document.querySelector("#chatInput");
     let people = [];
     let personSeq = 1;
     let originalPage = "";
 
     const PRESETS = {
-      adult: { role: "成人", age: 35, height_m: 1.7, student: false },
-      child: { role: "儿童", age: 7, height_m: 1.3, student: false },
-      toddler: { role: "幼童", age: 5, height_m: 1.1, student: false },
-      teen: { role: "少年", age: 14, height_m: 1.5, student: false },
+      adult: { role: "成人", age: 35, height_m: 1.7 },
+      child: { role: "儿童", age: 7, height_m: 1.3 },
+      toddler: { role: "幼童", age: 5, height_m: 1.1 },
     };
 
-    function currentVenue() {
-      return venues.find((v) => v.id === venueEl.value);
+    function pushBubble(role, text) {
+      const div = document.createElement("div");
+      div.className = "bubble " + role;
+      div.textContent = text;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
     }
 
-    function addPerson(kind) {
-      const base = PRESETS[kind] || PRESETS.child;
-      people.push({
-        id: "p" + personSeq++,
-        name: base.role + people.filter((p) => p.role === base.role).length + 1,
-        role: base.role,
-        age: base.age,
-        height_m: base.height_m,
-        student: !!base.student,
-      });
-      // fix name numbering simply
-      renumberNames();
-      renderPeople();
-    }
+    function currentVenue() { return venues.find((v) => v.id === venueEl.value); }
 
-    function renumberNames() {
+    function renumber() {
       const counts = {};
       for (const p of people) {
         counts[p.role] = (counts[p.role] || 0) + 1;
@@ -207,52 +184,47 @@
       }
     }
 
-    function setFamily(preset) {
-      if (preset === "clear") {
-        people = [];
-      } else if (preset === "parent-child") {
-        people = [];
-        personSeq = 1;
-        addPerson("adult");
-        addPerson("child");
-        return;
-      } else if (preset === "family3") {
-        people = [];
-        personSeq = 1;
-        addPerson("adult");
-        addPerson("child");
-        addPerson("toddler");
-        return;
-      }
-      personSeq = 1;
-      renumberNames();
+    function addPerson(kind) {
+      const base = PRESETS[kind] || PRESETS.child;
+      people.push({ id: "p" + personSeq++, role: base.role, name: base.role, age: base.age, height_m: base.height_m, student: false });
+      renumber();
       renderPeople();
+    }
+
+    function setPeopleFromTravelers(travelers) {
+      people = (travelers || []).map((t, i) => ({
+        id: t.id || "p" + (i + 1),
+        role: (t.name || "出行人").replace(/\d+$/, "") || "出行人",
+        name: t.name || "出行人" + (i + 1),
+        age: t.age,
+        height_m: t.height_m,
+        student: false,
+      }));
+      personSeq = people.length + 1;
+      renderPeople();
+    }
+
+    function setFamily(preset) {
+      people = [];
+      personSeq = 1;
+      if (preset === "family3") { addPerson("adult"); addPerson("child"); addPerson("toddler"); }
+      else { addPerson("adult"); addPerson("child"); }
     }
 
     function renderPeople() {
       if (!people.length) {
-        peopleEl.innerHTML = `<p class="warn">还没有出行人。点上面的「亲子二人」或「+ 儿童」即可，不用手打。</p>`;
+        peopleEl.innerHTML = `<p class="warn">还没有出行人。说一句「带孩子去科技馆」或点亲子二人。</p>`;
         return;
       }
-      peopleEl.innerHTML = people.map((p, index) => `
-        <div class="person" data-id="${p.id}">
-          <div class="person-top">
-            <strong>${p.name}</strong>
-            <button type="button" class="remove" data-remove="${p.id}">移除</button>
-          </div>
+      peopleEl.innerHTML = people.map((p) => `
+        <div class="person">
+          <div class="person-top"><strong>${p.name}</strong><button class="remove" data-remove="${p.id}" type="button">移除</button></div>
           <div class="person-grid">
-            <div>
-              <label>年龄</label>
-              <input type="number" min="0" max="80" value="${p.age}" data-field="age" data-id="${p.id}" />
-            </div>
-            <div>
-              <label>身高 ${Number(p.height_m).toFixed(2)} 米</label>
-              <input type="range" min="0.8" max="1.9" step="0.01" value="${p.height_m}" data-field="height_m" data-id="${p.id}" />
-            </div>
-            <label class="check"><input type="checkbox" data-field="student" data-id="${p.id}" ${p.student ? "checked" : ""} /> 学生优惠</label>
+            <div><label>年龄</label><input type="number" min="0" max="80" value="${p.age}" data-id="${p.id}" data-field="age" /></div>
+            <div><label>身高 ${Number(p.height_m).toFixed(2)} 米</label><input type="range" min="0.8" max="1.9" step="0.01" value="${p.height_m}" data-id="${p.id}" data-field="height_m" /></div>
+            <label class="check"><input type="checkbox" data-id="${p.id}" data-field="student" ${p.student ? "checked" : ""} />学生</label>
           </div>
-        </div>
-      `).join("");
+        </div>`).join("");
     }
 
     function fillVenue() {
@@ -261,123 +233,101 @@
       promoEl.value = venue.promo_text;
       pageEl.value = venue.page_text;
       originalPage = venue.page_text;
-      const tag = venue.verified ? "已对照来源" : "例句，非现行票价";
-      const split = venue.split === "heldout" ? "留出馆" : "样本馆";
-      sourceEl.textContent = `${venue.city} · ${split} · ${tag}`;
-      if (venue.source) sourceEl.textContent += ` · ${venue.source}`;
+      sourceEl.textContent = `${venue.city} · ${venue.verified ? "已核对" : "例句"} · ${venue.source || ""}`;
     }
 
-    function syncPersonFromEvent(target) {
-      const id = target.getAttribute("data-id");
-      const field = target.getAttribute("data-field");
-      const person = people.find((p) => p.id === id);
-      if (!person || !field) return;
-      if (field === "student") person.student = target.checked;
-      else if (field === "age") person.age = Number(target.value);
-      else if (field === "height_m") {
-        person.height_m = Number(target.value);
-        const labelEl = target.parentElement.querySelector("label");
-        if (labelEl) labelEl.textContent = `身高 ${person.height_m.toFixed(2)} 米`;
-      }
-    }
-
-    function run() {
+    function runOrder(botNote) {
       const base = currentVenue();
-      if (!base) return;
-      if (!people.length) {
-        document.querySelector("#summary").innerHTML = `<div>本单</div><div class="big">请先添加至少一位出行人</div>`;
-        document.querySelector("#results").innerHTML = "";
+      if (!base || !people.length) return;
+      const edited = pageEl.value !== originalPage;
+      const venue = { ...base, promo_text: promoEl.value, page_text: pageEl.value, gold: edited ? null : base.gold };
+      const card = RuleCardBrowser.buildOrderCard(venue, people);
+      document.querySelector("#summary").innerHTML = `
+        <div>${card.name} · ${card.summary.n} 人</div>
+        <div class="big">${card.summary_text}</div>
+        <div class="sub">${card.can_book ? "按当前规则，可以继续走向预订。" : "有阻断项，建议先处理再下单。"} ${card.release}</div>`;
+      document.querySelector("#blockers").innerHTML = (card.blockers || []).map((b) =>
+        `<div class="blocker">${b.message}</div>`
+      ).join("");
+      document.querySelector("#results").innerHTML = card.per_person.map((row) => `
+        <div class="result">
+          <div>${row.name} · ${row.age}岁 · ${Number(row.height_m).toFixed(2)}米</div>
+          <div class="ticket-tag ${row.promo_conflict ? "bad" : ""}">${row.ticket_label}</div>
+          <div class="meta">${row.clause || ""}${row.promo_conflict ? " · 种草可能在说免票" : ""}</div>
+        </div>`).join("");
+      document.querySelector("#cells").innerHTML = `
+        <div class="cell ${card.promo_conflict_any ? "bad" : "ok"}"><b>种草靠不靠谱</b>${card.promo_conflict_any ? "有人被种草说成免票，但条款不是" : "没有明显种草冲突"}</div>
+        <div class="cell"><b>放票</b>${card.release}</div>
+        <div class="cell ${card.can_book ? "ok" : "bad"}"><b>能否点预订</b>${card.can_book ? "未发现硬阻断" : "存在陪同/限额等阻断"}</div>`;
+      if (botNote) pushBubble("bot", botNote + " → " + card.summary_text + (card.blockers[0] ? "。" + card.blockers[0].message : "。"));
+    }
+
+    function handleChat(text) {
+      const q = String(text || "").trim();
+      if (!q) return;
+      pushBubble("user", q);
+      // 特殊：国博只有孩子
+      let intentText = q;
+      if (/国博/.test(q) && /只.*孩子|没有大人|就孩子/.test(q)) {
+        intentText = "国博 孩子";
+        const intent = RuleCardBrowser.parseIntent("去国博", venues);
+        if (intent.venue_id) venueEl.value = intent.venue_id;
+        fillVenue();
+        setPeopleFromTravelers([{ id: "儿童1", name: "儿童1", age: 7, height_m: 1.3 }]);
+        runOrder("只有孩子去国博时，我会检查是否必须成人代约");
+        chatInput.value = "";
         return;
       }
-      const edited = pageEl.value !== originalPage;
-      const venue = {
-        ...base,
-        promo_text: promoEl.value,
-        page_text: pageEl.value,
-        gold: edited ? null : base.gold,
-        verified: edited ? false : base.verified,
-      };
-
-      const rows = people.map((person) => {
-        const benefits = person.student ? ["child", "student"] : [];
-        const result = RuleCardBrowser.compileAndRun(venue, person.age, person.height_m, benefits);
-        return { person, result };
-      });
-
-      const counts = { free: 0, half: 0, full: 0 };
-      for (const row of rows) counts[row.result.compiled.ticket] += 1;
-      const conflict = rows.some((row) => row.result.compiled.promo.conflict);
-      const benefitHit = rows.some((row) => !row.result.compiled.benefits.ok);
-      const release = rows[0].result.compiled.release;
-      const parts = [];
-      if (counts.free) parts.push(`${counts.free} 人免票`);
-      if (counts.half) parts.push(`${counts.half} 人半票`);
-      if (counts.full) parts.push(`${counts.full} 人全票`);
-      document.querySelector("#summary").innerHTML = `
-        <div>${venue.name} · ${people.length} 位出行人</div>
-        <div class="big">${parts.join("，") || "未算出票种"}</div>
-        <div class="sub">${conflict ? "种草说法和条款不一致，下单前建议以页面为准。" : "种草与条款方向一致。"} ${release}</div>
-      `;
-
-      document.querySelector("#results").innerHTML = rows.map(({ person, result }) => {
-        const t = result.compiled.ticket;
-        const warn = result.compiled.promo.conflict;
-        return `
-          <div class="result">
-            <div class="who">${person.name} · ${person.age}岁 · ${Number(person.height_m).toFixed(2)}米</div>
-            <div class="ticket-tag ${warn ? "bad" : ""}">${result.compiled.ticket_label}</div>
-            <div class="meta">${result.compiled.ticket_clause || ""}${warn ? " · 种草可能在说免票，但此人不是免票" : ""}</div>
-          </div>`;
-      }).join("");
-
-      const sample = rows[0].result;
-      document.querySelector("#cells").innerHTML = `
-        <div class="cell ${conflict ? "bad" : "ok"}"><b>种草靠不靠谱</b>${conflict ? "有人被种草说成免票，但条款不是免票" : "种草和条款没有明显打架"}<div class="muted">${sample.compiled.promo.clause || sample.compiled.promo.onsale_note || "以票务页为准"}</div></div>
-        <div class="cell"><b>下一张票何时放</b>${release}<div class="muted">${sample.compiled.release_clause || ""}</div></div>
-        <div class="cell ${benefitHit ? "bad" : ""}"><b>优惠叠加</b>${benefitHit ? "有人同时勾了互斥优惠" : "当前出行人没有触发互斥优惠"}<div class="muted">${sample.compiled.benefits.clause || ""}</div></div>
-      `;
-
-      document.querySelector("#trace").innerHTML = (sample.trace || []).map((step) =>
-        `<div class="step"><b>${step.stage}</b><span>${step.summary}${step.detail ? " · " + step.detail : ""}</span></div>`
-      ).join("");
+      const intent = RuleCardBrowser.parseIntent(intentText, venues);
+      pushBubble("bot", intent.reply);
+      if (intent.venue_id) {
+        venueEl.value = intent.venue_id;
+        fillVenue();
+      }
+      if (intent.travelers && intent.travelers.length) setPeopleFromTravelers(intent.travelers);
+      if (intent.venue_id) runOrder("已按会话生成订单结论");
+      chatInput.value = "";
     }
 
     function load() {
-      venueEl.innerHTML = venues.map((v) =>
-        `<option value="${v.id}">${v.split === "heldout" ? "［留出］" : ""}${v.name}</option>`
-      ).join("");
+      venueEl.innerHTML = venues.map((v) => `<option value="${v.id}">${v.split === "heldout" ? "［留出］" : ""}${v.name}</option>`).join("");
       const prefer = venues.find((v) => v.id === "tech-museum") || venues[0];
       if (prefer) venueEl.value = prefer.id;
       fillVenue();
       setFamily("parent-child");
-      run();
+      pushBubble("bot", "你好。直接说「带孩子去科技馆」或点下面快捷句，我帮你算每个人什么票。");
+      runOrder();
     }
 
-    venueEl.addEventListener("change", () => { fillVenue(); run(); });
-    document.querySelector("#familyPresets").addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-preset]");
-      if (!btn) return;
-      setFamily(btn.getAttribute("data-preset"));
-      run();
-    });
-    document.querySelectorAll("[data-add]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        addPerson(btn.getAttribute("data-add"));
-        run();
-      });
-    });
+    document.querySelector("#chatSend").addEventListener("click", () => handleChat(chatInput.value));
+    chatInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handleChat(chatInput.value); });
+    document.querySelectorAll(".hint").forEach((btn) => btn.addEventListener("click", () => handleChat(btn.getAttribute("data-q"))));
+    venueEl.addEventListener("change", () => { fillVenue(); runOrder(); });
+    document.querySelectorAll("[data-preset]").forEach((btn) => btn.addEventListener("click", () => { setFamily(btn.getAttribute("data-preset")); runOrder(); }));
+    document.querySelectorAll("[data-add]").forEach((btn) => btn.addEventListener("click", () => { addPerson(btn.getAttribute("data-add")); runOrder(); }));
     peopleEl.addEventListener("click", (e) => {
       const id = e.target.getAttribute("data-remove");
       if (!id) return;
       people = people.filter((p) => p.id !== id);
-      renumberNames();
+      renumber();
       renderPeople();
-      run();
+      runOrder();
     });
-    peopleEl.addEventListener("input", (e) => { syncPersonFromEvent(e.target); });
-    peopleEl.addEventListener("change", (e) => { syncPersonFromEvent(e.target); run(); });
-    document.querySelector("#run").addEventListener("click", run);
-
+    peopleEl.addEventListener("input", (e) => {
+      const id = e.target.getAttribute("data-id");
+      const field = e.target.getAttribute("data-field");
+      const person = people.find((p) => p.id === id);
+      if (!person || !field) return;
+      if (field === "student") person.student = e.target.checked;
+      else if (field === "age") person.age = Number(e.target.value);
+      else if (field === "height_m") {
+        person.height_m = Number(e.target.value);
+        const lab = e.target.parentElement.querySelector("label");
+        if (lab) lab.textContent = `身高 ${person.height_m.toFixed(2)} 米`;
+      }
+    });
+    peopleEl.addEventListener("change", () => runOrder());
+    document.querySelector("#run").addEventListener("click", () => runOrder());
     load();
   </script>
 </body>

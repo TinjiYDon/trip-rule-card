@@ -49,6 +49,7 @@ def extract_rule(page_text: str, promo_text: str = "") -> dict:
     if days is None:
         days = _first_int(r"提前\s*(\d+)\s*日内", text)
     bundle_only = any(token in text for token in ("仅售套票", "不卖散票", "散客大门票已下架", "单独大门票"))
+    quota, escort = _party_constraints(text)
     return {
         "mode": _mode(text),
         "free_height_m": free_h,
@@ -59,6 +60,8 @@ def extract_rule(page_text: str, promo_text: str = "") -> dict:
         "half_height_inclusive": half_h_incl,
         "free_age_inclusive": free_age_incl,
         "half_age_inclusive": half_age_incl,
+        "free_children_per_adult": quota,
+        "escort_required_under_age": escort,
         "release_days_ahead": days,
         "release_clock": _clock(text),
         "no_show_note": _no_show(text),
@@ -197,15 +200,15 @@ def _age_ranges(
 
 
 def _kind(local: str, sentence: str) -> str | None:
-    if "半" in local:
+    if "半" in local or "半票" in local or "半价" in local:
         return "half"
-    if any(token in local for token in ("免", "不收", "免费")):
+    if "优惠票" in sentence or ("优惠" in local and "免" not in local):
+        return "half"
+    if any(token in local for token in ("免", "不收", "免费")) and "优惠" not in local:
         return "free"
-    if "优惠" in local and "免" not in local:
-        return "half"
     if any(token in sentence for token in ("免", "不收", "免费")) and "半" not in sentence and "优惠" not in sentence:
         return "free"
-    if "半" in sentence or ("优惠" in sentence and "免" not in sentence):
+    if "半" in sentence or ("优惠" in sentence and "免票" not in sentence):
         return "half"
     return None
 
@@ -260,3 +263,28 @@ def _sentence_with(text: str, tokens: tuple[str, ...]) -> str:
         if any(token in chunk for token in tokens):
             return chunk.strip()
     return ""
+
+
+def _party_constraints(text: str) -> tuple[int | None, int | None]:
+    quota = None
+    escort = None
+    patterns = (
+        r"(?:1|一)名成人限携\s*(\d+)\s*名",
+        r"每名成人最多带\s*(\d+)\s*名",
+        r"一名成人可携带一名",
+        r"1名成人可带\s*(\d+)\s*名",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            if match.lastindex:
+                quota = int(match.group(1))
+            else:
+                quota = 1
+            break
+    escort_match = re.search(r"未满\s*(\d+)\s*周岁[^。]{0,24}(?:须|需)(?:由)?成年人", text)
+    if escort_match:
+        escort = int(escort_match.group(1))
+    elif "须有成人陪同" in text or "须由成年人代" in text:
+        escort = 14
+    return quota, escort
