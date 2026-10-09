@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>规则卡 LIVE DEMO · 不鸣则已</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#5c6778; --line:#e4e8ef; --blue:#124ea2; --bg:#f4f6f8; --ok:#0e7c66; --bad:#9a3412; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: var(--bg); color: var(--ink); }
+    header { padding: 20px 28px 8px; }
+    header h1 { margin: 0; font-size: 22px; }
+    header p { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 720px; line-height: 1.5; }
+    .badge { display:inline-block; background:#e8eef8; color:var(--blue); font-size:12px; padding:2px 8px; border-radius:999px; margin-right:6px; }
+    main { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 16px; padding: 12px 28px 28px; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px 18px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+    select, textarea, input[type="number"] { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; }
+    textarea { min-height: 72px; resize: vertical; }
+    #page { min-height: 140px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    button { margin-top: 14px; background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 10px 14px; font: inherit; cursor: pointer; }
+    .card h2 { margin: 0 0 8px; font-size: 16px; }
+    .cells { display: grid; gap: 8px; }
+    .cell { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+    .cell b { display: block; font-size: 13px; margin-bottom: 4px; }
+    .ok { border-color: #b7e0d6; background: #f3fbf8; }
+    .bad { border-color: #f3c7b8; background: #fff6f3; }
+    .muted { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .compare { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .pill { border-radius: 999px; padding: 4px 10px; font-size: 13px; background: #eef2f7; }
+    .pill.bad { background: #fff1ec; color: var(--bad); }
+    .pill.ok { background: #e8f6f2; color: var(--ok); }
+    .warn { font-size: 12px; color: var(--muted); }
+    .trace { grid-column: 1 / -1; }
+    .step { display: grid; grid-template-columns: 72px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .step b { color: var(--blue); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>规则卡 <span class="badge">LIVE DEMO</span><span class="badge">赛题二 · 旅行体验创新</span></h1>
+    <p>队名「不鸣则已」。嵌在「立即预订」之前：把票务散文编译成规则再执行。可改原文；断网也能跑（本页为浏览器离线引擎）。推荐路径：科技馆 → 东方明珠（留出）→ 改原文。</p>
+  </header>
+  <main>
+    <section class="panel">
+      <label>景区</label>
+      <select id="venue"></select>
+      <p class="warn" id="source"></p>
+      <div class="row">
+        <div>
+          <label>年龄</label>
+          <input id="age" type="number" min="0" max="18" value="7" />
+        </div>
+        <div>
+          <label>身高（米） <span id="heightLabel">1.30</span></label>
+          <input id="height" type="range" min="0.9" max="1.6" step="0.01" value="1.30" />
+        </div>
+      </div>
+      <label>短视频 / 笔记</label>
+      <textarea id="promo"></textarea>
+      <label>票务页原文（可改，改过后不再显示预存答案）</label>
+      <textarea id="page"></textarea>
+      <label><input id="student" type="checkbox" /> 同时使用学生优惠（看能否叠加）</label>
+      <button id="run" type="button">编译并执行</button>
+    </section>
+    <section class="panel card">
+      <h2>预订前的四格</h2>
+      <div class="compare" id="compare"></div>
+      <div class="cells" id="cells"></div>
+      <p class="warn" id="errors"></p>
+    </section>
+    <section class="panel trace">
+      <h2>六步数据流</h2>
+      <div id="trace"></div>
+    </section>
+  </main>
+  <script src="./venues.js"></script>
+  <script src="./rulecard_browser.js"></script>
+  <script>
+    const venueEl = document.querySelector("#venue");
+    const promoEl = document.querySelector("#promo");
+    const pageEl = document.querySelector("#page");
+    const sourceEl = document.querySelector("#source");
+    const heightEl = document.querySelector("#height");
+    const heightLabel = document.querySelector("#heightLabel");
+    const label = RuleCardBrowser.LABEL;
+    let venues = window.RULECARD_VENUES || [];
+    let originalPage = "";
+
+    function current() { return venues.find((v) => v.id === venueEl.value); }
+
+    function fill() {
+      const venue = current();
+      if (!venue) return;
+      promoEl.value = venue.promo_text;
+      pageEl.value = venue.page_text;
+      originalPage = venue.page_text;
+      const age = (venue.gold && venue.gold.age != null) ? venue.gold.age : 7;
+      const height = (venue.gold && venue.gold.height_m != null) ? venue.gold.height_m : 1.3;
+      document.querySelector("#age").value = age;
+      heightEl.value = height;
+      heightLabel.textContent = Number(height).toFixed(2);
+      const tag = venue.verified ? "已对照来源" : "种子例句，不是该馆现行票价";
+      const split = venue.split === "heldout" ? "留出馆" : "训练馆";
+      sourceEl.textContent = `${venue.city} · ${split} · ${tag} · ${venue.source}`;
+    }
+
+    function load() {
+      venueEl.innerHTML = venues.map((v) =>
+        `<option value="${v.id}">${v.split === "heldout" ? "［留出］" : ""}${v.name}</option>`
+      ).join("");
+      const prefer = venues.find((v) => v.id === "tech-museum") || venues[0];
+      if (prefer) venueEl.value = prefer.id;
+      fill();
+      document.querySelector("#run").click();
+    }
+
+    heightEl.addEventListener("input", () => { heightLabel.textContent = Number(heightEl.value).toFixed(2); });
+    venueEl.addEventListener("change", fill);
+
+    document.querySelector("#run").addEventListener("click", () => {
+      const base = current();
+      if (!base) return;
+      const edited = pageEl.value !== originalPage;
+      const venue = {
+        ...base,
+        promo_text: promoEl.value,
+        page_text: pageEl.value,
+        gold: edited ? null : base.gold,
+        verified: edited ? false : base.verified,
+      };
+      const benefits = document.querySelector("#student").checked ? ["child", "student"] : [];
+      const result = RuleCardBrowser.compileAndRun(
+        venue,
+        Number(document.querySelector("#age").value),
+        Number(heightEl.value),
+        benefits
+      );
+      const compiled = result.compiled;
+      const promoBad = compiled.promo.conflict;
+      const benefitBad = !compiled.benefits.ok;
+      const names = {
+        promo_conflict: "种草冲突",
+        dual_threshold: "双门槛",
+        bundle: "仅售套票",
+        no_threshold: "没有可执行门槛",
+        compile_miss: "编译未对上标注",
+        release_miss: "放票时刻没读到",
+      };
+      const tone = (flag) => (flag === false ? "bad" : flag === true ? "ok" : "");
+      const gold = result.gold_ticket ? `<span class="pill">标注答案：${label[result.gold_ticket]}</span>` : "";
+      document.querySelector("#compare").innerHTML = `
+        <span class="pill ${tone(result.baseline_correct)}">只看种草：${label[result.baseline_ticket]}</span>
+        <span class="pill ${tone(result.first_number_correct)}">只读首个数：${label[result.first_number_ticket]}</span>
+        <span class="pill ${tone(result.compiled_correct)}">编译执行：${compiled.ticket_label}</span>
+        ${gold}`;
+      document.querySelector("#errors").textContent = (result.errors || []).length
+        ? "错因：" + result.errors.map((item) => names[item] || item).join("、")
+        : "这页没有标出错因";
+      document.querySelector("#trace").innerHTML = (result.trace || []).map((step) =>
+        `<div class="step"><b>${step.stage}</b><span>${step.summary}${step.detail ? " · " + step.detail : ""}</span></div>`
+      ).join("");
+      document.querySelector("#cells").innerHTML = `
+        <div class="cell"><b>这个人算什么票</b>${compiled.ticket_label}<div class="muted">${compiled.ticket_clause}</div></div>
+        <div class="cell ${promoBad ? "bad" : "ok"}"><b>种草和在售</b>${promoBad ? "说法和条款不一致" : "说法和票种一致"}${compiled.promo.bundle_only ? "。页面仅售套票" : ""}<div class="muted">${compiled.promo.clause || compiled.promo.onsale_note || ""}</div></div>
+        <div class="cell"><b>下一张票何时放</b>${compiled.release}<div class="muted">${compiled.release_clause}</div></div>
+        <div class="cell ${benefitBad ? "bad" : ""}"><b>优惠能不能叠加</b>${benefitBad ? compiled.benefits.notes.join("；") : "未同时勾选互斥优惠"}<div class="muted">${compiled.benefits.clause}</div></div>`;
+    });
+
+    load();
+  </script>
+</body>
+</html>

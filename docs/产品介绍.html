@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>规则卡 · 产品介绍 · 不鸣则已</title>
+  <style>
+    body { margin: 0; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; color: #172033; background: #f7f8fb; line-height: 1.6; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    h2 { font-size: 18px; margin: 28px 0 10px; border-left: 4px solid #124ea2; padding-left: 10px; }
+    .sub { color: #5c6778; margin-bottom: 20px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+    .card { background: #fff; border: 1px solid #e4e8ef; border-radius: 12px; padding: 14px 16px; }
+    .card b { display: block; color: #124ea2; font-size: 22px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; font-size: 14px; }
+    th, td { border: 1px solid #e4e8ef; padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #eef2f7; }
+    a { color: #124ea2; }
+    .note { font-size: 13px; color: #5c6778; }
+    ol { padding-left: 1.2em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>规则卡 · 产品介绍</h1>
+    <p class="sub">携程首届高校 AI Hackathon · 赛题二 旅行体验创新 · 队名「不鸣则已」</p>
+
+    <h2>1. 问题与用户</h2>
+    <p>阻断下单的往往不是攻略，而是付款前：这个人今天算免票还是半票、种草与条款是否一致、何时放票、优惠能否叠加。面向即将点「立即预订」的出行人（尤其亲子）。</p>
+
+    <h2>2. 核心能力</h2>
+    <div class="cards">
+      <div class="card">离线六步编译执行<br/><span class="note">分句→抽槽→校验→修补→执行→对照</span></div>
+      <div class="card">三路对照 + 错因<br/><span class="note">种草 / 首个数 / 编译</span></div>
+      <div class="card">预订前四格 DEMO<br/><span class="note">可改原文，留出馆可验证</span></div>
+    </div>
+
+    <h2>3. 技术创新点</h2>
+    <ul>
+      <li>神经符号分工：自然语言只提议结构，符号规则才下结论。</li>
+      <li>结构校验挡住残缺规则；模型草案可选，过不了校验即丢弃。</li>
+      <li>默认断网可演示，不把现场押在外网接口上。</li>
+    </ul>
+
+    <h2>4. 当前评测（语料内，不作全国外推）</h2>
+    <div class="cards">
+      <div class="card">页面 / 有标注<b>16 / 15</b></div>
+      <div class="card">已核对官网<b>5</b></div>
+      <div class="card">编译执行准确率<b>1.0</b><span class="note">种草 0.133 · 首个数 0.333</span></div>
+    </div>
+    <p class="note">完整表见同目录 <a href="./report.html">report.html</a>。</p>
+
+    <h2>5. LIVE DEMO</h2>
+    <p>在线体验：<a href="./live/">docs/live/</a>（GitHub Pages 部署后即为公网入口）</p>
+    <ol>
+      <li>打开「中国科学技术馆」：种草免票 vs 编译半票。</li>
+      <li>打开「［留出］东方明珠」：1.25 米 / 7 岁 → 半票。</li>
+      <li>改票务原文任意几字：预存答案消失，证明非写死馆名。</li>
+    </ol>
+
+    <h2>6. 诚实边界</h2>
+    <table>
+      <tr><th>做了</th><th>没做</th></tr>
+      <tr>
+        <td>规则编译、对照评测、可改原文演示、公开官网页核对样本</td>
+        <td>行程规划、真下单、接携程库存、把未核验例句说成现行价</td>
+      </tr>
+    </table>
+
+    <h2>7. 仓库与复现</h2>
+    <p>https://github.com/TinjiYDon/trip-rule-card</p>
+    <pre style="background:#fff;border:1px solid #e4e8ef;padding:12px;border-radius:8px;overflow:auto;">python demo/server.py
+python eval/run_eval.py
+python eval/render_report.py</pre>
+  </div>
+</body>
+</html>

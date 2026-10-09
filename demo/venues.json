@@ -1,0 +1,238 @@
+[
+  {
+    "id": "and-plain",
+    "name": "示例合取馆",
+    "city": "杭州",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句。用「且」写合取，不写「同时满足」这两个字，避免抽取只认原词",
+    "page_text": "半票只在身高1.4米以下且未满14周岁时成立。提前3天，每日18:00放票。",
+    "promo_text": "小孩来都算半票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.45,
+      "ticket": "full"
+    }
+  },
+  {
+    "id": "both-gate",
+    "name": "示例双门槛馆",
+    "city": "郑州",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句，对应中新网所述「低于 1.4 米且不满 14 周岁」，不指向具体景区现行价",
+    "page_text": "儿童票须同时满足：身高1.4米以下，且未满14周岁半票。缺一不可。每日18:00放票，可提前3天。",
+    "promo_text": "不满14岁一律儿童半票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.45,
+      "ticket": "full"
+    }
+  },
+  {
+    "id": "bundle-show",
+    "name": "示例沉浸馆",
+    "city": "广州",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句，对应新快报 2026-07-20 转述的低价种草与仅售套票，不是某馆现行价",
+    "page_text": "散客大门票已下架，仅售套票。1.2米以下免票，1.4米以下半票。每日16:00放票，可提前2天。",
+    "promo_text": "39.9元单人票，儿童免费。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "chnmuseum",
+    "name": "中国国家博物馆",
+    "city": "北京",
+    "split": "train",
+    "verified": true,
+    "source": "https://www.chnmuseum.cn/gbgg/202507/t20250725_272247.shtml 观众预约须知（2025-07-25）",
+    "page_text": "观众须使用有效身份证件完成预约账号实名认证后进行免费预约。未满14周岁(含)的未成年人，须由成年人代为预约，并与预约人同步核验入馆。观众可提前7日内预约，预约放票时间为每日17:00。同一证件号累积3次未履约将被限制预约30日。",
+    "promo_text": "国博儿童免票，不用预约随便进。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "free"
+    }
+  },
+  {
+    "id": "cm-park",
+    "name": "示例厘米馆",
+    "city": "成都",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句。门槛写成厘米，用来检查换算，不是某馆现行价",
+    "page_text": "120厘米以下免票，140厘米以下半票。提前2天，每日09:00放票。",
+    "promo_text": "小朋友免票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "either-park",
+    "name": "示例乐园",
+    "city": "上海",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句，对应新华网 2025-08-20 所述年龄或身高二选一，不是迪士尼现行价",
+    "page_text": "1.2米以下免票。儿童优惠满足其一即可：身高1.5米以下，或未满11周岁，二选一按半票。每日10:00放票，可提前3天。",
+    "promo_text": "1米2以下才免费，我们家孩子肯定免票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "gugong",
+    "name": "故宫博物院",
+    "city": "北京",
+    "split": "train",
+    "verified": true,
+    "source": "https://www.dpm.org.cn/subject_booking/index.html 大门票优惠政策与参观前7日20:00预约",
+    "page_text": "未满18周岁的中国公民(含港澳台及获得永久居留权的外国人)免费参观。18周岁以上学生凭学生证可购学生票。不售当日票，门票于参观前7日20:00开始预约。",
+    "promo_text": "带娃去故宫，儿童免费，随便进。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "free"
+    }
+  },
+  {
+    "id": "height-park",
+    "name": "示例山岳景区",
+    "city": "上海",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句，对应中新网 2026-03-24 所述「1.2 米以下免票、1.2 至 1.4 米半票」，不是某一家官网的现行价",
+    "page_text": "1.2米以下免票，1.2米至1.4米半票，1.4米及以上全票。每日17:00放票，可提前5天预约。",
+    "promo_text": "小朋友一律儿童免费，不用买票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "heldout-board",
+    "name": "留出馆 · 只有立牌",
+    "city": "青岛",
+    "split": "heldout",
+    "verified": false,
+    "source": "留出样本。页面没有数字，用来展示编译失败的边界，不进入准确率分母",
+    "page_text": "儿童优惠以入口立牌公示为准，详情咨询现场工作人员。",
+    "promo_text": "小孩全免。",
+    "gold": null
+  },
+  {
+    "id": "heldout-both",
+    "name": "留出馆 · 双条件纪念馆",
+    "city": "南京",
+    "split": "heldout",
+    "verified": false,
+    "source": "留出样本。句子换成「缺一不可」，不复用训练集原句",
+    "page_text": "购买儿童半票缺一不可：身高1.4米以下，且未满14周岁。可提前4天，每日15:00放票。",
+    "promo_text": "14岁以下都算半票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.45,
+      "ticket": "full"
+    }
+  },
+  {
+    "id": "heldout-inclusive",
+    "name": "留出馆 · 含本数",
+    "city": "苏州",
+    "split": "heldout",
+    "verified": false,
+    "source": "留出样本。边界写成「含」，句子不复用训练集",
+    "page_text": "免票线为1.20米(含)以下。未满6周岁也可免票，二选一。半票线为1.50米(含)以下。提前5天，每日11:00放票。",
+    "promo_text": "不到一米二全免费，再高也免。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.25,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "heldout-river",
+    "name": "留出馆 · 江边公园",
+    "city": "上海",
+    "split": "heldout",
+    "verified": false,
+    "source": "留出样本，句子与训练集不同，供现场证明不是写死馆名",
+    "page_text": "游客身高不满1.2米免票。1.2米以上、1.4米以下购买半票。可提前6天，每日09:30放票。",
+    "promo_text": "小孩全部免票入园。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "oriental-pearl",
+    "name": "东方明珠",
+    "city": "上海",
+    "split": "heldout",
+    "verified": true,
+    "source": "https://you.ctrip.com/sight/shanghai2/762.html 景点页公开优待政策；购票以东方明珠官方公众号为准",
+    "page_text": "儿童:1米(不含)以下，免费；身高1米(含)-1.3米(含)或年龄6周岁(含)以下，半价。须实名购票并预约通行码。",
+    "promo_text": "一米三以下儿童免费登塔。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.25,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "shanghai-museum",
+    "name": "上海博物馆特展优待",
+    "city": "上海",
+    "split": "train",
+    "verified": true,
+    "source": "https://www.shanghaimuseum.net/mu/frontend/pg/article/id/I00004707 特展票务优待政策",
+    "page_text": "6周岁(含)以下的儿童享受免票优待，一名成人可携带一名免票儿童。60周岁(含)以上的老年人，6周岁以上、18周岁及以下的未成年人，全日制大学本科及以下学历学生实行优惠票。展览于开放购票日16:00起可购30天内门票。",
+    "promo_text": "上博特展小孩都免票。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "tech-museum",
+    "name": "中国科学技术馆",
+    "city": "北京",
+    "split": "train",
+    "verified": true,
+    "source": "https://cstm.org.cn/ykfw/yygp/index.html 主展厅免费票与优惠票。优惠票在本系统记为半票",
+    "page_text": "主展厅免费票:8周岁(含)以下儿童或身高1.3米(含)以下有成人陪同的儿童。优惠票:未满18周岁的未成年人。参观须提前订票，最早可于参观7日前18:00开始预订。",
+    "promo_text": "科技馆小孩免票，带去就能进。",
+    "gold": {
+      "age": 10,
+      "height_m": 1.4,
+      "ticket": "half"
+    }
+  },
+  {
+    "id": "yi-mi",
+    "name": "示例口语馆",
+    "city": "重庆",
+    "split": "train",
+    "verified": false,
+    "source": "种子例句。门槛写成「一米二」，不是某馆现行价",
+    "page_text": "不到一米二免票，一米二至一米四半票。每日09:00放票，可提前1天。",
+    "promo_text": "孩子免票，现场不用问。",
+    "gold": {
+      "age": 7,
+      "height_m": 1.3,
+      "ticket": "half"
+    }
+  }
+]
